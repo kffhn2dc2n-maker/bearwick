@@ -1,24 +1,24 @@
 /* BEARWICK: page behaviour (vanilla JS)
-   Order: DATA -> helpers -> age gate -> flavours -> taste -> nutrients -> static lists -> shop -> cart -> init */
+   Order: DATA -> helpers -> age gate -> flavours -> taste -> static lists -> shop -> cart -> init */
 
 /* ================= DATA ================= */
 const FLAVOURS = [
   { id:'blackcurrant', name:'Blackcurrant', color:'#8e5cd1', tag:'Dark. Fruity. Surprisingly refreshing.',
     desc:'The flagship, and the easiest way into stout. Smooth, dark and gently tart.',
     notes:['Smooth roasted malt','Light coffee and chocolate','Fresh blackcurrant','Gentle tartness','Clean finish'],
-    profile:{Roast:4,Fruit:3,Tartness:3,Sweetness:2,Bitterness:2,Refreshing:4} },
+    profile:{Roast:4,Flavour:3,Tartness:3,Sweetness:2,Bitterness:2,Refreshing:4} },
   { id:'cherry', name:'Cherry', color:'#b3243b', tag:'Smooth. Rich. Easy to drink.',
     desc:'A lighter stout with subtle dark cherry and a dry finish.',
     notes:['Roasted malt','Soft chocolate','Dark cherry','Gentle sweetness','Dry finish'],
-    profile:{Roast:3,Fruit:3,Tartness:2,Sweetness:3,Bitterness:2,Refreshing:3} },
+    profile:{Roast:3,Flavour:3,Tartness:2,Sweetness:3,Bitterness:2,Refreshing:3} },
   { id:'raspberry', name:'Raspberry', color:'#e0386f', tag:'Tart. Smooth. Refreshing.',
     desc:'Lighter and slightly tart, with a crisp finish.',
     notes:['Smooth roasted malt','Light cocoa','Fresh raspberry','Gentle acidity','Crisp finish'],
-    profile:{Roast:3,Fruit:4,Tartness:4,Sweetness:2,Bitterness:2,Refreshing:4} },
-  { id:'orange', name:'Blood Orange', color:'#e8812a', tag:'Citrus. Light. Unexpected.',
-    desc:'The most refreshing and distinctive of the four.',
-    notes:['Light roasted malt','Citrus aroma','Blood orange','Subtle bitterness','Refreshing finish'],
-    profile:{Roast:2,Fruit:4,Tartness:3,Sweetness:2,Bitterness:3,Refreshing:5} }
+    profile:{Roast:3,Flavour:4,Tartness:4,Sweetness:2,Bitterness:2,Refreshing:4} },
+  { id:'peanut', name:'Peanut Butter', color:'#d9a05b', tag:'Nutty. Smooth. Unexpected.', allergen:'Contains peanuts',
+    desc:'A smooth, creamy stout with roasted peanut and light cocoa.',
+    notes:['Smooth roasted malt','Light cocoa','Roasted peanut','Creamy body','Dry finish'],
+    profile:{Roast:3,Flavour:4,Tartness:1,Sweetness:3,Bitterness:2,Refreshing:3} }
 ];
 const ABV = '3.8%';
 const PACKS = { single:{label:'Single can', price:2.75}, four:{label:'4-pack', price:9.75}, twelve:{label:'12-pack', price:26} };
@@ -26,18 +26,11 @@ const BUNDLES = [
   { id:'mixed12', name:'Mixed 12-Pack', price:27, main:true, desc:'Three of each flavour. The best way to find your favourite.' },
   { id:'discovery', name:'Discovery Box', price:30, desc:'Four flavours, plus the BEARWICK bear on the box.' }
 ];
-// Illustrative concept values only. Claim wording follows the brief; check against UK rules before launch.
-const NUTRIENTS = [
-  { name:'Vitamin B12', amt:'1.25 µg (50% NRV)', claim:'Contributes to normal energy-yielding metabolism and the reduction of tiredness and fatigue.' },
-  { name:'Vitamin B6',  amt:'0.7 mg (50% NRV)',  claim:'Contributes to normal energy-yielding metabolism and normal psychological function.' },
-  { name:'Magnesium',   amt:'94 mg (25% NRV)',   claim:'Contributes to normal muscle function and normal energy-yielding metabolism.' },
-  { name:'Zinc',        amt:'2.5 mg (25% NRV)',  claim:'Contributes to normal cognitive function and the protection of cells from oxidative stress.' }
-];
-const INGREDIENTS = ['Water','Pale malt','Roasted barley','Chocolate malt','Oats','Wheat','Hops','Yeast','Natural fruit flavouring or extract','Selected vitamins and minerals'];
+const INGREDIENTS = ['Water','Pale malt','Roasted barley','Chocolate malt','Oats','Wheat','Hops','Yeast','Natural flavourings'];
 const REVIEWS = [
   ['I normally walk past stout. This one I finished and went back for.','Sample, Blackcurrant'],
   ['Dark but not heavy. The cherry is there without being sweet.','Sample, Cherry'],
-  ['Blood orange on a warm evening. Did not expect that to work.','Sample, Blood Orange']
+  ['Peanut butter and stout should not work. It really does.','Sample, Peanut Butter']
 ];
 
 /* ================= HELPERS ================= */
@@ -56,7 +49,6 @@ function canSVG(f) {
     <text x="60" y="84" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="700" font-size="12.5" fill="#f0e6d6" letter-spacing="1">BEARWICK</text>
     <text x="60" y="102" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="600" font-size="8" fill="${f.color}" letter-spacing="1">${f.name.toUpperCase()}</text>
     <text x="60" y="114" text-anchor="middle" font-family="Figtree,sans-serif" font-size="6" fill="#f0e6d6" letter-spacing="2">STOUT</text>
-    <text x="60" y="130" text-anchor="middle" font-family="Figtree,sans-serif" font-size="4.5" fill="#f0e6d6" opacity=".7" letter-spacing="1">WITH VITAMINS &amp; MINERALS</text>
     <path fill="${f.color}" d="M18 202V160h8v-5h5v5h5v-14h5v-4h6v4h5v14h5v-5h5v5h6v-9h6v9h28v42z"/>
     <text x="60" y="193" text-anchor="middle" font-family="Figtree,sans-serif" font-size="4.5" fill="#0c0a0a" font-weight="700" letter-spacing="1">${ABV} ABV · 330ML</text>
   </svg>`;
@@ -108,20 +100,10 @@ function renderTaste() {
       <div class="bar"><i style="width:${f.profile[a] * 20}%;background:${f.color}"></i></div></div>`).join('')}</div></div>`;
 }
 
-/* ================= VITAMINS & MINERALS ================= */
-function renderNutrient(i = 0) {
-  $('#nutrient-tabs').innerHTML = NUTRIENTS.map((n, k) =>
-    `<button class="pill !rounded-2xl !py-4 text-left" role="tab" data-nutrient="${k}" aria-selected="${k === i}">${n.name}</button>`).join('');
-  const n = NUTRIENTS[i];
-  $('#nutrient-detail').innerHTML = `<h3 class="font-display wide text-2xl">${n.name}</h3><p class="mt-4 text-lg leading-relaxed">${n.claim}</p>
-    <p class="mt-6 text-sm text-cream/55">Illustrative amount per can: ${n.amt}. Concept only. Claims need UK regulatory approval before launch.</p>`;
-}
-
 /* ================= STATIC LISTS ================= */
 function renderLists() {
   $('#hero-can').innerHTML = canSVG(FLAVOURS[0]);
   $('#ingredients').innerHTML = INGREDIENTS.map((i) => `<li class="border border-white/15 rounded-full px-4 py-2 text-sm">${i}</li>`).join('');
-  $('#nrv-table').innerHTML = NUTRIENTS.map((n) => `<tr><td class="py-2">${n.name}</td><td class="text-right">${n.amt}</td></tr>`).join('');
   $('#reviews').innerHTML = REVIEWS.map(([q, who]) => `<blockquote class="bg-ink rounded-3xl p-7"><p class="text-lg leading-snug">${q}</p><footer class="mt-4 text-xs text-cream/50">${who}</footer></blockquote>`).join('');
 }
 
@@ -137,7 +119,7 @@ function renderShop() {
       <div class="w-24 mx-auto">${canSVG(f)}</div>
       <h3 class="font-display wide text-lg mt-4" style="color:${f.color}">${f.name}</h3>
       <p class="text-sm text-cream/65 mt-2 flex-1">${f.desc}</p>
-      <p class="text-xs text-cream/45 mt-3">${ABV} ABV · 330ml can</p>
+      <p class="text-xs text-cream/45 mt-3">${ABV} ABV · 330ml can${f.allergen ? ' · ' + f.allergen : ''}</p>
       <select class="mt-4 bg-ink border border-white/15 rounded-full px-4 py-2 text-sm" data-pack="${f.id}" aria-label="Pack size for ${f.name}">
         ${Object.entries(PACKS).map(([k, p]) => `<option value="${k}">${p.label} · ${money(p.price)}</option>`).join('')}</select>
       <button class="btn mt-3 !py-3" data-add-flavour="${f.id}">Add to basket</button></article>`).join('');
@@ -167,13 +149,12 @@ const Cart = {
 
 /* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  initAgeGate(); renderLists(); renderFlavours(); renderTaste(); renderNutrient(); renderShop(); Cart.load(); Cart.update();
+  initAgeGate(); renderLists(); renderFlavours(); renderTaste(); renderShop(); Cart.load(); Cart.update();
 
   // One delegated click handler for all dynamic buttons
   document.addEventListener('click', (e) => {
     const t = (sel) => e.target.closest(sel);
     if (t('[data-flavour]')) setFlavour(t('[data-flavour]').dataset.flavour);
-    if (t('[data-nutrient]')) renderNutrient(+t('[data-nutrient]').dataset.nutrient);
     if (t('[data-add]')) { const b = BUNDLES.find((x) => x.id === t('[data-add]').dataset.add); Cart.add(b.id, b.name, b.price); }
     if (t('[data-add-flavour]')) {
       const f = fl(t('[data-add-flavour]').dataset.addFlavour), k = document.querySelector(`[data-pack="${f.id}"]`).value, p = PACKS[k];
