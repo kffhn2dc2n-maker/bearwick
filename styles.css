@@ -1,0 +1,32 @@
+/* BEARWICK: styles that complement Tailwind utilities */
+:root { --accent: #8e5cd1; }                      /* swapped by script.js when a flavour is selected */
+html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: 4rem; }
+.wide { font-stretch: 125%; text-transform: uppercase; letter-spacing: .02em; }
+
+/* Buttons */
+.btn { display:inline-block; text-align:center; cursor:pointer; background:#f0e6d6; color:#0c0a0a; font-weight:700; font-size:.8rem;
+  letter-spacing:.15em; text-transform:uppercase; padding:1rem 1.8rem; border-radius:999px; transition: transform .2s, background .2s; }
+.btn:hover { background:#fff; transform: translateY(-2px); }
+.btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+.btn-ghost { display:inline-block; text-align:center; cursor:pointer; border:1px solid rgba(240,230,214,.6); font-weight:700; font-size:.8rem;
+  letter-spacing:.15em; text-transform:uppercase; padding:1rem 1.8rem; border-radius:999px; transition: background .2s; }
+.btn-ghost:hover { background: rgba(240,230,214,.1); }
+
+:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+
+/* One orchestrated page-load moment: the hero headline rises in */
+.rise { animation: rise .9s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes rise { from { opacity:0; transform: translateY(24px); } }
+
+/* Flavour can buttons */
+.can-btn { transition: transform .3s, filter .3s; filter: saturate(.6) brightness(.75); }
+.can-btn:hover, .can-btn[aria-pressed="true"] { transform: translateY(-10px); filter:none; }
+
+/* Chips, tabs, bars */
+.pill { padding:.55rem 1.1rem; border:1px solid rgba(255,255,255,.2); border-radius:999px; font-size:.85rem; cursor:pointer; transition:.2s; }
+.pill[aria-selected="true"] { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:700; }
+.bar { height:.5rem; background:rgba(255,255,255,.1); border-radius:999px; overflow:hidden; }
+.bar > i { display:block; height:100%; border-radius:999px; transition: width .6s ease; }
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
