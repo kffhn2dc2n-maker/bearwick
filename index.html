@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BEARWICK | Stout, Reimagined.</title>
-  <meta name="description" content="A lighter, smoother, more drinkable stout in four flavours. Concept brand from Warwick, England.">
+  <title>BEARWICK | Summer fruit. Winter stout.</title>
+  <meta name="description" content="Fruit-forward stout from Warwickshire. Summer fruit, winter stout, all year BEARWICK.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Tailwind via CDN with BEARWICK tokens -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { theme: { extend: {
@@ -19,28 +18,37 @@
 </head>
 <body class="bg-ink text-cream font-sans antialiased">
 
-  <!-- BEARWICK bear icon (one-colour): bear peering over a castle battlement. Reused via <use href="#bear"> -->
+  <!-- BEARWICK mascot (one-colour, editable vector): full-body bear carrying a keg like a rucksack.
+       Reused everywhere via <use href="#bear">. Swap this symbol for final artwork later. -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="bear" viewBox="0 0 100 100">
-      <circle cx="26" cy="24" r="11" fill="currentColor"/><circle cx="74" cy="24" r="11" fill="currentColor"/>
-      <circle cx="50" cy="48" r="30" fill="currentColor"/>
-      <circle cx="39" cy="42" r="3.2" fill="var(--cut,#0c0a0a)"/><circle cx="61" cy="42" r="3.2" fill="var(--cut,#0c0a0a)"/>
-      <ellipse cx="50" cy="59" rx="13" ry="10" fill="var(--cut,#0c0a0a)" opacity=".18"/>
-      <ellipse cx="50" cy="54" rx="5.5" ry="3.8" fill="var(--cut,#0c0a0a)"/>
-      <path fill="currentColor" d="M16 98V84h8v-5h8v5h8v-5h8v5h8v-5h8v5h8v-5h8v5h8v-5h8v5h8v14z"/>
+    <symbol id="bear" viewBox="0 0 100 130">
+      <!-- legs and feet -->
+      <path d="M44 92L41 118M62 92L68 118" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+      <ellipse cx="38" cy="121" rx="9" ry="4.5" fill="currentColor"/><ellipse cx="72" cy="121" rx="9" ry="4.5" fill="currentColor"/>
+      <!-- body, forward arm, head, ears -->
+      <ellipse cx="53" cy="70" rx="22" ry="31" fill="currentColor"/>
+      <path d="M62 56L77 74" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="58" cy="19" r="5.5" fill="currentColor"/><circle cx="75" cy="19" r="5.5" fill="currentColor"/>
+      <circle cx="66" cy="31" r="15" fill="currentColor"/><ellipse cx="78" cy="37" rx="9" ry="6.5" fill="currentColor"/>
+      <circle cx="70" cy="28" r="2.2" fill="var(--cut,#0c0a0a)"/><ellipse cx="85" cy="35" rx="3" ry="2.4" fill="var(--cut,#0c0a0a)"/>
+      <path d="M76 42q4 2.5 8 0" stroke="var(--cut,#0c0a0a)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- keg on the back: outlined so it reads against the body, with hoops and a tap -->
+      <g transform="rotate(-8 29 60)" stroke="var(--cut,#0c0a0a)" stroke-width="2.2">
+        <rect x="13" y="38" width="32" height="46" rx="7" fill="currentColor"/>
+        <path d="M13 50H45M13 72H45" fill="none"/><circle cx="13" cy="61" r="2.6" fill="var(--cut,#0c0a0a)"/>
+      </g>
+      <!-- rucksack straps over the shoulder and under the arm -->
+      <path d="M36 46Q58 40 62 66M34 78Q50 86 60 78" stroke="var(--cut,#0c0a0a)" stroke-width="3" fill="none" stroke-linecap="round"/>
     </symbol>
   </svg>
 
-  <!-- ============ AGE GATE (UK legal age 18+) ============ -->
+  <!-- ============ AGE GATE (UK 18+) ============ -->
   <div id="age-gate" class="fixed inset-0 z-[100] hidden items-center justify-center bg-ink/95 p-6" role="dialog" aria-modal="true" aria-labelledby="age-title">
     <div class="max-w-md text-center bg-char border border-white/10 rounded-3xl p-10">
       <svg class="w-16 h-16 mx-auto text-cream"><use href="#bear"/></svg>
       <h2 id="age-title" class="font-display wide text-3xl mt-5">Are you 18 or over?</h2>
       <p class="text-cream/60 mt-3 text-sm">You must be of legal drinking age to enter.</p>
-      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-        <button id="age-yes" class="btn">Yes, enter</button>
-        <button id="age-no" class="btn-ghost">No</button>
-      </div>
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center"><button id="age-yes" class="btn">Yes, enter</button><button id="age-no" class="btn-ghost">No</button></div>
       <p id="age-denied" class="hidden mt-5 text-sm text-cream/70">Sorry, you must be of legal drinking age to view this site.</p>
     </div>
   </div>
@@ -49,16 +57,15 @@
   <header class="fixed top-0 inset-x-0 z-40 bg-gradient-to-b from-ink/90 to-transparent">
     <div class="max-w-7xl mx-auto px-5 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
       <nav class="hidden md:flex gap-8 text-xs tracking-[.2em] uppercase" aria-label="Main">
-        <a href="#top" class="hover:text-cream/60">Home</a><a href="#story" class="hover:text-cream/60">Our Story</a>
-        <a href="#flavours" class="hover:text-cream/60">Flavours</a><a href="#shop" class="hover:text-cream/60">Shop</a>
+        <a href="#top" class="hover:text-cream/60">Home</a><a href="#flavours" class="hover:text-cream/60">Flavours</a>
+        <a href="#story" class="hover:text-cream/60">Our Story</a><a href="#shop" class="hover:text-cream/60">Shop</a>
       </nav>
       <button id="menu-btn" class="md:hidden justify-self-start p-2" aria-label="Menu" aria-expanded="false">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
       <a href="#top" class="flex items-center gap-3 justify-self-center">
-        <svg class="w-10 h-10"><use href="#bear"/></svg>
-        <span class="leading-none"><span class="font-display wide text-2xl md:text-3xl font-bold tracking-[.12em]">BEARWICK</span>
-        <span class="hidden md:block text-[10px] tracking-[.3em] mt-1 text-cream/60">STOUT, REIMAGINED</span></span>
+        <svg class="w-9 h-10"><use href="#bear"/></svg>
+        <span class="font-display wide text-2xl md:text-3xl font-bold tracking-[.12em]">BEARWICK</span>
       </a>
       <button id="cart-toggle" class="relative justify-self-end p-2" aria-label="Open basket">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linejoin="round" d="M5 8h14l-1 12H6L5 8zM9 8a3 3 0 016 0"/></svg>
@@ -66,152 +73,78 @@
       </button>
     </div>
     <nav id="mobile-menu" class="hidden md:hidden bg-char px-5 py-4 space-y-3 text-sm tracking-[.2em] uppercase">
-      <a href="#story" class="block">Our Story</a><a href="#flavours" class="block">Flavours</a><a href="#shop" class="block">Shop</a>
+      <a href="#flavours" class="block">Flavours</a><a href="#story" class="block">Our Story</a><a href="#shop" class="block">Shop</a>
     </nav>
   </header>
 
   <main id="top">
-    <!-- ============ 1. HERO ============ -->
+    <!-- ============ HERO ============ -->
     <section class="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-esp via-[#1a100d] to-ink pt-24">
-      <div class="absolute inset-x-0 top-0 h-2/3 bg-[radial-gradient(ellipse_at_70%_70%,rgba(214,120,60,.35),transparent_60%)]"></div>
-      <!-- Warwick castle skyline: dashed strokes make the battlements -->
-      <svg class="absolute bottom-0 inset-x-0 w-full h-48 md:h-72 text-ink" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-        <g fill="currentColor" stroke="currentColor"><rect x="0" y="150" width="1200" height="50" stroke="none"/>
-          <rect x="520" y="90" width="70" height="110" stroke="none"/><rect x="520" y="86" width="70" height="0" stroke-width="10" stroke-dasharray="10 10"/>
-          <rect x="600" y="110" width="150" height="90" stroke="none"/><rect x="600" y="106" width="150" height="0" stroke-width="10" stroke-dasharray="10 10"/>
-          <rect x="760" y="60" width="64" height="140" stroke="none"/><rect x="760" y="56" width="64" height="0" stroke-width="10" stroke-dasharray="10 10"/></g>
-      </svg>
-      <div class="relative max-w-7xl mx-auto px-5 grid md:grid-cols-2 gap-10 items-center w-full pb-24">
+      <div class="absolute inset-x-0 top-0 h-2/3 bg-[radial-gradient(ellipse_at_70%_70%,rgba(214,120,60,.3),transparent_60%)]"></div>
+      <div class="relative max-w-7xl mx-auto px-5 grid md:grid-cols-2 gap-10 items-center w-full pb-16">
         <div class="rise">
-          <h1 class="font-display wide font-extrabold text-5xl sm:text-6xl lg:text-8xl leading-[.95]">STOUT, REIMAGINED.</h1>
-          <p class="mt-7 text-xl text-cream/80 max-w-md">A lighter, smoother, more drinkable stout in four flavours.</p>
-          <div class="mt-9 flex flex-wrap gap-3">
-            <a href="#shop" class="btn">Shop BEARWICK</a><a href="#flavours" class="btn-ghost">Explore the flavours</a>
-          </div>
+          <h1 class="font-display wide font-extrabold text-5xl sm:text-6xl lg:text-7xl leading-[.95]">Summer fruit.<br>Winter stout.<br><span id="hero-accent" class="text-cream/60">All year BEARWICK.</span></h1>
+          <p class="mt-7 text-xl text-cream/80 max-w-md">A smooth stout with real fruit character. The fruitiness you love in summer, the stout you love in winter, in one can.</p>
+          <div class="mt-9 flex flex-wrap gap-3"><a href="#shop" class="btn">Shop BEARWICK</a><a href="#flavours" class="btn-ghost">Meet the flavours</a></div>
         </div>
-        <div class="relative flex justify-center md:justify-end gap-6 items-end">
-          <div id="hero-can" class="w-44 sm:w-56 lg:w-64 drop-shadow-[0_30px_40px_rgba(0,0,0,.6)] hover:-rotate-2 transition-transform duration-500"></div>
-          <ul class="hidden lg:block space-y-8 text-center text-[11px] tracking-[.2em] uppercase text-cream/80 w-28 pb-10">
-            <li>Real flavours</li><li>Lighter body</li><li>Clean, dry finish</li>
-          </ul>
-        </div>
+        <div id="hero-cans" class="flex justify-center items-end gap-2 sm:gap-6"></div>
       </div>
     </section>
 
-    <!-- ============ 2. WHAT IS BEARWICK ============ -->
+    <!-- ============ WHAT MAKES BEARWICK DIFFERENT ============ -->
     <section class="max-w-6xl mx-auto px-5 py-28">
-      <h2 class="font-display wide font-extrabold text-4xl md:text-6xl max-w-3xl leading-none">ALL THE DARKNESS. NONE OF THE HEAVINESS.</h2>
-      <p class="mt-8 text-lg text-cream/70 max-w-2xl leading-relaxed">BEARWICK is a lighter, smoother, more drinkable stout. Roasted malt up front, a little flavour in the middle, a clean finish at the end. Built for people who love stout, and for people who never have.</p>
-      <ol class="mt-14 grid sm:grid-cols-4 gap-px bg-white/10 rounded-2xl overflow-hidden text-center">
-        <li class="bg-ink p-6 font-display wide">Dark</li><li class="bg-ink p-6 font-display wide">Smooth</li>
-        <li class="bg-ink p-6 font-display wide">Subtle flavour</li><li class="bg-ink p-6 font-display wide">Refreshing finish</li>
-      </ol>
-    </section>
-
-    <!-- ============ 3. THE FOUR FLAVOURS (flavour selector) ============ -->
-    <section id="flavours" class="bg-char py-24 border-y border-white/5">
-      <div class="max-w-7xl mx-auto px-5">
-        <h2 class="font-display wide font-extrabold text-4xl md:text-5xl">Find your flavour.</h2>
-        <p class="text-cream/60 mt-3">Same great stout. Different character. Tap a can.</p>
-        <div id="flavour-cans" class="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-6"></div>
-        <div id="flavour-detail" class="mt-10 text-center max-w-xl mx-auto" aria-live="polite"></div>
+      <h2 class="font-display wide font-extrabold text-4xl md:text-6xl max-w-3xl leading-none">Two seasons. One can.</h2>
+      <div class="mt-12 grid md:grid-cols-[1fr_auto_1fr] gap-6 items-stretch">
+        <div class="rounded-3xl bg-burg/50 p-8"><h3 class="font-display wide text-2xl">Summer fruit</h3><p class="mt-3 text-cream/70 leading-relaxed">Fruit drinks say warm days, freshness and easy drinking.</p></div>
+        <div class="hidden md:flex items-center font-display text-4xl text-cream/40">+</div>
+        <div class="rounded-3xl bg-esp p-8"><h3 class="font-display wide text-2xl">Winter stout</h3><p class="mt-3 text-cream/70 leading-relaxed">Stout says cold evenings, roasted flavour and real character.</p></div>
       </div>
+      <p class="mt-10 text-lg text-cream/80 max-w-2xl leading-relaxed">BEARWICK puts them together: a smooth, approachable stout with distinctive fruit flavours, built to be enjoyed whatever the weather.</p>
     </section>
 
-    <!-- ============ 4. WHY BEARWICK ============ -->
-    <section class="max-w-6xl mx-auto px-5 py-28 grid md:grid-cols-3 gap-12">
-      <div><h3 class="font-display wide text-xl font-bold">Lighter, not lesser.</h3><p class="mt-3 text-cream/65 leading-relaxed">Around 4% ABV and a light-to-medium body. Easy to finish, easy to go again.</p></div>
-      <div><h3 class="font-display wide text-xl font-bold">Flavour, never overpowering.</h3><p class="mt-3 text-cream/65 leading-relaxed">Flavour sits behind the roast, never over it. Not a sugary beer. Not a dessert stout.</p></div>
-      <div><h3 class="font-display wide text-xl font-bold">Made to be drunk again.</h3><p class="mt-3 text-cream/65 leading-relaxed">Dark, smooth and clean on the finish, so the second can is as good as the first.</p></div>
+    <!-- ============ FLAVOURS (one section per product, rendered by script.js) ============ -->
+    <section id="flavours" class="border-y border-white/5">
+      <div id="flavour-sections"></div>
     </section>
 
-    <!-- ============ 6. WHAT'S INSIDE ============ -->
-    <section class="max-w-6xl mx-auto px-5 py-28 grid lg:grid-cols-2 gap-12">
-      <div>
-        <h2 class="font-display wide font-extrabold text-4xl md:text-5xl">What's inside.</h2>
-        <p class="mt-5 text-cream/60 text-sm">A proposed commercial recipe concept. Final brewing would require professional development and testing.</p>
-        <ul id="ingredients" class="mt-8 flex flex-wrap gap-2"></ul>
-      </div>
-      <dl class="grid grid-cols-2 gap-px bg-white/10 rounded-2xl overflow-hidden text-sm self-start">
-        <div class="bg-ink p-5"><dt class="text-cream/50">ABV</dt><dd class="font-display wide text-xl">~3.8–4.2%</dd></div>
-        <div class="bg-ink p-5"><dt class="text-cream/50">Body</dt><dd class="font-display wide text-xl">Light–medium</dd></div>
-        <div class="bg-ink p-5"><dt class="text-cream/50">Carbonation</dt><dd class="font-display wide text-xl">Moderate</dd></div>
-        <div class="bg-ink p-5"><dt class="text-cream/50">Bitterness</dt><dd class="font-display wide text-xl">Low–moderate</dd></div>
-        <div class="bg-ink p-5 col-span-2"><dt class="text-cream/50">Finish</dt><dd class="font-display wide text-xl">Dry and clean</dd></div>
-      </dl>
-    </section>
-
-    <!-- ============ 7. TASTE PROFILES ============ -->
-    <section class="bg-char py-24 border-y border-white/5">
-      <div class="max-w-4xl mx-auto px-5">
-        <h2 class="font-display wide font-extrabold text-4xl md:text-5xl">Taste profiles.</h2>
-        <div id="taste-tabs" class="mt-8 flex flex-wrap gap-2" role="tablist"></div>
-        <div id="taste-panel" class="mt-8" aria-live="polite"></div>
-        <label class="mt-8 inline-flex items-center gap-3 text-sm text-cream/70"><input id="compare" type="checkbox" class="accent-current"> Compare all four</label>
-      </div>
-    </section>
-
-    <!-- ============ 8. OUR WARWICK STORY ============ -->
+    <!-- ============ BRAND STORY ============ -->
     <section id="story" class="max-w-6xl mx-auto px-5 py-28 grid md:grid-cols-2 gap-12 items-center">
       <div>
-        <h2 class="font-display wide font-extrabold text-4xl md:text-5xl">Our Warwick story.</h2>
-        <p class="mt-6 text-cream/75 leading-relaxed">Everyone loves stout. Plenty of people also find it too heavy, too bitter, too filling. Meanwhile, modern flavoured beers proved that people will happily try beer in new ways.</p>
-        <p class="mt-4 text-cream/75 leading-relaxed">So we asked: <strong class="text-cream">what if stout could be as easy to drink as a lager?</strong> We have roots in Warwick, England. That gave us the name, and a bear.</p>
+        <h2 class="font-display wide font-extrabold text-4xl md:text-5xl">Why BEARWICK exists.</h2>
+        <p class="mt-6 text-cream/75 leading-relaxed">We think stout has been stuck in winter for too long. Fruit drinks get the sunshine; stout gets the cold. We wanted one drink that does both.</p>
+        <p class="mt-4 text-cream/75 leading-relaxed">BEARWICK is rooted in Warwickshire, and so is the bear. He carries his keg wherever the party is, in any season.</p>
       </div>
-      <div class="flex justify-center"><svg class="w-64 h-64 text-cream/90"><use href="#bear"/></svg></div>
+      <div class="flex justify-center"><svg class="w-64 h-80 text-cream/90"><use href="#bear"/></svg></div>
     </section>
 
-    <!-- ============ 9. NUTRITION ============ -->
-    <section class="bg-char py-24 border-y border-white/5">
-      <div class="max-w-5xl mx-auto px-5">
-        <h2 class="font-display wide font-extrabold text-4xl md:text-5xl">Nutrition.</h2>
-        <p class="mt-3 inline-block text-xs tracking-widest uppercase border border-cream/40 rounded-full px-3 py-1">Illustrative formulation, not final commercial data</p>
-        <div class="mt-10 max-w-lg">
-          <div class="bg-ink rounded-3xl p-7"><h3 class="font-display wide text-lg">Per 330ml can</h3>
-            <table class="w-full mt-4 text-sm"><tbody class="divide-y divide-white/10">
-              <tr><td class="py-2">Energy</td><td class="text-right">120–140 kcal</td></tr><tr><td class="py-2">ABV</td><td class="text-right">3.8–4.2%</td></tr>
-              <tr><td class="py-2">Carbohydrate</td><td class="text-right">10–14 g</td></tr><tr><td class="py-2">Sugars</td><td class="text-right">2–5 g</td></tr></tbody></table></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ 10. SHOP ============ -->
-    <section id="shop" class="max-w-7xl mx-auto px-5 py-28">
+    <!-- ============ SHOP ============ -->
+    <section id="shop" class="max-w-7xl mx-auto px-5 py-24 border-t border-white/5">
       <h2 class="font-display wide font-extrabold text-4xl md:text-6xl">Shop BEARWICK.</h2>
-      <div id="bundles" class="mt-10 grid md:grid-cols-3 gap-6"></div>
-      <h3 class="font-display wide text-xl mt-16">Or pick a flavour</h3>
-      <div id="product-grid" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      <p class="mt-3 text-xs text-cream/50">Concept pricing for demonstration only.</p>
+      <div id="bundles" class="mt-10"></div>
+      <div id="product-grid" class="mt-6 grid sm:grid-cols-2 gap-6"></div>
     </section>
 
-    <!-- ============ 11. REVIEWS ============ -->
-    <section class="bg-char py-24 border-y border-white/5">
-      <div class="max-w-6xl mx-auto px-5">
-        <h2 class="font-display wide font-extrabold text-4xl md:text-5xl">"I never liked stout, but..."</h2>
-        <p class="mt-2 text-xs text-cream/50">Illustrative sample feedback for a concept brand, not real customer reviews.</p>
-        <div id="reviews" class="mt-10 grid md:grid-cols-3 gap-6"></div>
-      </div>
-    </section>
-
-    <!-- ============ 12. NEWSLETTER ============ -->
+    <!-- ============ NEWSLETTER ============ -->
     <section class="max-w-2xl mx-auto px-5 py-24 text-center">
-      <h2 class="font-display wide font-extrabold text-3xl md:text-4xl">Made to be drunk again.</h2>
+      <h2 class="font-display wide font-extrabold text-3xl md:text-4xl">Be first to taste it.</h2>
       <p class="mt-3 text-cream/65">Launch news and first access. No spam.</p>
       <form id="news-form" class="mt-8 flex flex-col sm:flex-row gap-3">
-        <input id="news-email" type="email" required placeholder="Your email" class="flex-1 bg-char border border-white/15 rounded-full px-6 py-3.5 placeholder:text-cream/40">
+        <input type="email" required placeholder="Your email" class="flex-1 bg-char border border-white/15 rounded-full px-6 py-3.5 placeholder:text-cream/40">
         <button class="btn" type="submit">Sign up</button>
       </form>
       <p id="news-msg" class="mt-4 text-sm text-cream/70 min-h-[1.25rem]"></p>
     </section>
   </main>
 
-  <!-- ============ 13. FOOTER ============ -->
+  <!-- ============ FOOTER ============ -->
   <footer class="border-t border-white/10">
     <div class="max-w-6xl mx-auto px-5 py-14">
       <div class="flex flex-col sm:flex-row justify-between gap-6">
-        <div class="flex items-center gap-3"><svg class="w-9 h-9"><use href="#bear"/></svg><span class="font-display wide text-2xl tracking-[.12em]">BEARWICK</span></div>
+        <div class="flex items-center gap-3"><svg class="w-8 h-10"><use href="#bear"/></svg><span class="font-display wide text-2xl tracking-[.12em]">BEARWICK</span></div>
         <div class="flex gap-6 text-sm"><a href="#" class="hover:text-cream/60">Instagram</a><a href="#" class="hover:text-cream/60">TikTok</a><a href="#" class="hover:text-cream/60">X</a></div>
       </div>
-      <p class="mt-10 text-xs text-cream/45 leading-relaxed max-w-4xl">BEARWICK is a concept brand. Nutritional values and ingredients shown on this website are illustrative and would require commercial formulation, laboratory testing and regulatory approval before sale. Contains cereals containing gluten (barley, wheat, oats); the Peanut Butter flavour contains peanuts. Alcohol should be consumed responsibly.</p>
+      <p class="mt-10 text-xs text-cream/45 leading-relaxed max-w-4xl">BEARWICK is a concept brand and its recipes are still in development. Ingredients shown describe the intended recipe direction and would require brewing, tasting, laboratory testing and regulatory approval before sale. Contains cereals containing gluten (barley, oats). Alcohol should be consumed responsibly.</p>
     </div>
   </footer>
 

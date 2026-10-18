@@ -1,56 +1,53 @@
 /* BEARWICK: page behaviour (vanilla JS)
-   Order: DATA -> helpers -> age gate -> flavours -> taste -> static lists -> shop -> cart -> init */
+   Order: DATA -> can artwork -> age gate -> flavour sections -> shop -> basket -> init */
 
 /* ================= DATA ================= */
+// No ABV, tasting scores, nutrition or health claims: none are confirmed yet.
 const FLAVOURS = [
-  { id:'blackcurrant', name:'Blackcurrant', color:'#8e5cd1', tag:'Dark. Fruity. Surprisingly refreshing.',
-    desc:'The flagship, and the easiest way into stout. Smooth, dark and gently tart.',
-    notes:['Smooth roasted malt','Light coffee and chocolate','Fresh blackcurrant','Gentle tartness','Clean finish'],
-    profile:{Roast:4,Flavour:3,Tartness:3,Sweetness:2,Bitterness:2,Refreshing:4} },
-  { id:'cherry', name:'Cherry', color:'#b3243b', tag:'Smooth. Rich. Easy to drink.',
-    desc:'A lighter stout with subtle dark cherry and a dry finish.',
-    notes:['Roasted malt','Soft chocolate','Dark cherry','Gentle sweetness','Dry finish'],
-    profile:{Roast:3,Flavour:3,Tartness:2,Sweetness:3,Bitterness:2,Refreshing:3} },
-  { id:'raspberry', name:'Raspberry', color:'#e0386f', tag:'Tart. Smooth. Refreshing.',
-    desc:'Lighter and slightly tart, with a crisp finish.',
-    notes:['Smooth roasted malt','Light cocoa','Fresh raspberry','Gentle acidity','Crisp finish'],
-    profile:{Roast:3,Flavour:4,Tartness:4,Sweetness:2,Bitterness:2,Refreshing:4} },
-  { id:'peanut', name:'Peanut Butter', color:'#d9a05b', tag:'Nutty. Smooth. Unexpected.', allergen:'Contains peanuts',
-    desc:'A smooth, creamy stout with roasted peanut and light cocoa.',
-    notes:['Smooth roasted malt','Light cocoa','Roasted peanut','Creamy body','Dry finish'],
-    profile:{Roast:3,Flavour:4,Tartness:1,Sweetness:3,Bitterness:2,Refreshing:3} }
+  { id:'blackcurrant', name:'Blackcurrant Stout', lines:['BLACKCURRANT'], color:'#9b6be0', can:'#6d3fb8',
+    tag:'Dark. Fruity. Balanced.',
+    desc:'A smooth stout with a distinctive blackcurrant character. Fruity and easy to drink, with the roasted malt that keeps it properly stout.',
+    fruit:['Blackcurrant','Gives the fruity, slightly tart character that sets this stout apart.'] },
+  { id:'cherry', name:'Cherry & Vanilla Stout', lines:['CHERRY','& VANILLA'], color:'#d1405a', can:'#a3182f',
+    tag:'Smooth. Rounded. Distinctive.',
+    desc:'Cherry fruitiness softened by vanilla. Smooth and balanced, aiming to be rounded rather than sweet or dessert-like.',
+    fruit:['Cherry and vanilla','Cherry brings the fruit; vanilla is there to round it off and keep it smooth.'] }
 ];
-const ABV = '3.8%';
+// Shared recipe: intended contribution only. Real flavour depends on brewing and tasting.
+const BASE_INGREDIENTS = [
+  ['Malt', 'Pale Malt', 'The base of the beer, intended to give body and a gentle malt backbone.'],
+  ['Malt', 'Flaked Oats', 'Intended to add smoothness and a softer, rounder feel.'],
+  ['Malt', 'Roasted Barley', 'Intended to bring the dark colour and the roasted character that makes it a stout.'],
+  ['Hops', 'East Kent Goldings', 'A classic English hop, intended for gentle balance rather than sharp bitterness.'],
+  ['Yeast', 'S-04 English Ale Yeast (dry)', 'A dry English ale yeast, intended for a clean, dependable ferment.']
+];
 const PACKS = { single:{label:'Single can', price:2.75}, four:{label:'4-pack', price:9.75}, twelve:{label:'12-pack', price:26} };
-const BUNDLES = [
-  { id:'mixed12', name:'Mixed 12-Pack', price:27, main:true, desc:'Three of each flavour. The best way to find your favourite.' },
-  { id:'discovery', name:'Discovery Box', price:30, desc:'Four flavours, plus the BEARWICK bear on the box.' }
-];
-const INGREDIENTS = ['Water','Pale malt','Roasted barley','Chocolate malt','Oats','Wheat','Hops','Yeast','Natural flavourings'];
-const REVIEWS = [
-  ['I normally walk past stout. This one I finished and went back for.','Sample, Blackcurrant'],
-  ['Dark but not heavy. The cherry is there without being sweet.','Sample, Cherry'],
-  ['Peanut butter and stout should not work. It really does.','Sample, Peanut Butter']
-];
+const BUNDLE = { id:'mixed12', name:'Mixed 12-Pack', price:27, desc:'Six of each flavour. The easiest way to meet both.' };
 
 /* ================= HELPERS ================= */
 const $ = (s) => document.querySelector(s);
 const money = (n) => '£' + n.toFixed(2);
-const state = { flavour: 'blackcurrant', compare: false };
 const fl = (id) => FLAVOURS.find((f) => f.id === id);
 
-// SVG can: dark body, bear mark, flavour name, and a Warwick Castle skyline in the flavour colour
+/* ================= CAN ARTWORK =================
+   Realistic aluminium can: black body, metal rims, highlight, bear mascot, wordmark,
+   restrained flavour accent, and a Warwick castle skyline band. */
 function canSVG(f) {
-  return `<svg viewBox="0 0 120 220" class="w-full h-auto" role="img" aria-label="BEARWICK ${f.name} stout can">
-    <defs><linearGradient id="g-${f.id}" x1="0" x2="1"><stop offset="0" stop-color="#050404"/><stop offset=".45" stop-color="#26201f"/><stop offset="1" stop-color="#050404"/></linearGradient></defs>
-    <rect x="18" y="8" width="84" height="204" rx="10" fill="url(#g-${f.id})"/>
-    <rect x="22" y="4" width="76" height="8" rx="3" fill="#6b6665"/><rect x="22" y="208" width="76" height="8" rx="3" fill="#6b6665"/>
-    <use href="#bear" x="40" y="22" width="40" height="40" style="color:#f0e6d6;--cut:#0c0a0a"/>
-    <text x="60" y="84" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="700" font-size="12.5" fill="#f0e6d6" letter-spacing="1">BEARWICK</text>
-    <text x="60" y="102" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="600" font-size="8" fill="${f.color}" letter-spacing="1">${f.name.toUpperCase()}</text>
-    <text x="60" y="114" text-anchor="middle" font-family="Figtree,sans-serif" font-size="6" fill="#f0e6d6" letter-spacing="2">STOUT</text>
-    <path fill="${f.color}" d="M18 202V160h8v-5h5v5h5v-14h5v-4h6v4h5v14h5v-5h5v5h6v-9h6v9h28v42z"/>
-    <text x="60" y="193" text-anchor="middle" font-family="Figtree,sans-serif" font-size="4.5" fill="#0c0a0a" font-weight="700" letter-spacing="1">${ABV} ABV · 330ML</text>
+  const name = f.lines.map((l, i) => `<text x="60" y="${150 + i * 10}" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="700" font-size="7.5" fill="${f.color}" letter-spacing="1">${l}</text>`).join('');
+  return `<svg viewBox="0 0 120 246" class="w-full h-auto" role="img" aria-label="BEARWICK ${f.name} can">
+    <defs>
+      <linearGradient id="body-${f.id}" x1="0" x2="1"><stop offset="0" stop-color="#030303"/><stop offset=".2" stop-color="#2e2e2e"/><stop offset=".34" stop-color="#0e0e0e"/><stop offset=".78" stop-color="#0a0a0a"/><stop offset=".93" stop-color="#262626"/><stop offset="1" stop-color="#030303"/></linearGradient>
+      <linearGradient id="metal" x1="0" x2="1"><stop offset="0" stop-color="#6b6b6b"/><stop offset=".35" stop-color="#e4e4e4"/><stop offset=".65" stop-color="#9a9a9a"/><stop offset="1" stop-color="#5a5a5a"/></linearGradient>
+    </defs>
+    <path d="M18 24Q18 15 28 13H92Q102 15 102 24V222Q102 231 92 233H28Q18 231 18 222Z" fill="url(#body-${f.id})"/>
+    <rect x="24" y="8" width="72" height="9" rx="3.5" fill="url(#metal)"/><rect x="24" y="230" width="72" height="9" rx="3.5" fill="url(#metal)"/>
+    <rect x="25" y="26" width="5" height="194" rx="2.5" fill="#fff" opacity=".12"/>
+    <use href="#bear" x="34" y="30" width="52" height="68" style="color:#f0e6d6;--cut:#0b0b0b"/>
+    <text x="60" y="120" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="800" font-size="13" fill="#f0e6d6" letter-spacing="1.2">BEARWICK</text>
+    <text x="60" y="132" text-anchor="middle" font-family="Figtree,sans-serif" font-size="6" fill="#f0e6d6" letter-spacing="3.5">STOUT</text>
+    <rect x="44" y="137" width="32" height="1.4" fill="${f.can}"/>
+    ${name}
+    <g transform="translate(0,28)"><path fill="${f.can}" d="M18 202V160h8v-5h5v5h5v-14h5v-4h6v4h5v14h5v-5h5v5h6v-9h6v9h28v42z"/></g>
   </svg>`;
 }
 
@@ -68,61 +65,44 @@ function initAgeGate() {
   $('#age-no').addEventListener('click', () => $('#age-denied').classList.remove('hidden'));
 }
 
-/* ================= FLAVOUR SELECTOR (drives taste profile + accent colour) ================= */
-function setFlavour(id) {
-  state.flavour = id;
-  document.documentElement.style.setProperty('--accent', fl(id).color);
-  renderFlavours(); renderTaste();
-}
+/* ================= FLAVOUR SECTIONS ================= */
 function renderFlavours() {
-  $('#flavour-cans').innerHTML = FLAVOURS.map((f) => `
-    <button class="can-btn text-center" data-flavour="${f.id}" aria-pressed="${f.id === state.flavour}">
-      <div class="w-28 sm:w-36 mx-auto drop-shadow-[0_20px_25px_rgba(0,0,0,.6)]">${canSVG(f)}</div>
-      <p class="font-display wide mt-4" style="color:${f.color}">${f.name}</p></button>`).join('');
-  const f = fl(state.flavour);
-  $('#flavour-detail').innerHTML = `<p class="font-display wide text-xl" style="color:${f.color}">${f.tag}</p><p class="mt-3 text-cream/70">${f.desc}</p>`;
-}
-
-/* ================= TASTE PROFILES ================= */
-function renderTaste() {
-  $('#taste-tabs').innerHTML = FLAVOURS.map((f) =>
-    `<button class="pill" role="tab" data-flavour="${f.id}" aria-selected="${f.id === state.flavour}">${f.name}</button>`).join('');
-  const f = fl(state.flavour), attrs = Object.keys(f.profile);
-  if (state.compare) {                       // one row per attribute, one bar per flavour
-    $('#taste-panel').innerHTML = attrs.map((a) => `<div class="mb-5"><p class="text-sm mb-2">${a}</p>${FLAVOURS.map((x) =>
-      `<div class="bar mb-1"><i style="width:${x.profile[a] * 20}%;background:${x.color}"></i></div>`).join('')}</div>`).join('')
-      + `<p class="text-xs text-cream/50">${FLAVOURS.map((x) => `<span style="color:${x.color}">&#9632;</span> ${x.name}`).join('&nbsp;&nbsp;')}</p>`;
-    return;
-  }
-  $('#taste-panel').innerHTML = `<div class="grid md:grid-cols-2 gap-8">
-    <ul class="space-y-2 text-cream/80">${f.notes.map((n) => `<li>${n}</li>`).join('')}</ul>
-    <div>${attrs.map((a) => `<div class="mb-4"><div class="flex justify-between text-sm mb-1"><span>${a}</span><span>${f.profile[a]}/5</span></div>
-      <div class="bar"><i style="width:${f.profile[a] * 20}%;background:${f.color}"></i></div></div>`).join('')}</div></div>`;
-}
-
-/* ================= STATIC LISTS ================= */
-function renderLists() {
-  $('#hero-can').innerHTML = canSVG(FLAVOURS[0]);
-  $('#ingredients').innerHTML = INGREDIENTS.map((i) => `<li class="border border-white/15 rounded-full px-4 py-2 text-sm">${i}</li>`).join('');
-  $('#reviews').innerHTML = REVIEWS.map(([q, who]) => `<blockquote class="bg-ink rounded-3xl p-7"><p class="text-lg leading-snug">${q}</p><footer class="mt-4 text-xs text-cream/50">${who}</footer></blockquote>`).join('');
+  $('#hero-cans').innerHTML = FLAVOURS.map((f, i) =>
+    `<a href="#${f.id}" class="w-32 sm:w-44 lg:w-52 drop-shadow-[0_30px_40px_rgba(0,0,0,.65)] transition-transform duration-500 hover:-translate-y-3 ${i ? 'rotate-3 mb-0' : '-rotate-3 mb-6'}">${canSVG(f)}</a>`).join('');
+  $('#flavour-sections').innerHTML = FLAVOURS.map((f, i) => {
+    const items = [...BASE_INGREDIENTS, ['Fruit flavour', f.fruit[0], f.fruit[1]]];
+    return `<article id="${f.id}" class="py-24" style="background:linear-gradient(180deg,${f.can}22,transparent 70%)">
+      <div class="max-w-6xl mx-auto px-5 grid lg:grid-cols-2 gap-12 items-center">
+        <div class="flex justify-center ${i % 2 ? 'lg:order-2' : ''}"><div class="w-48 sm:w-60 drop-shadow-[0_30px_40px_rgba(0,0,0,.65)]">${canSVG(f)}</div></div>
+        <div>
+          <p class="font-display wide text-sm tracking-widest" style="color:${f.color}">${f.tag}</p>
+          <h2 class="font-display wide font-extrabold text-4xl md:text-5xl mt-2">${f.name}</h2>
+          <p class="mt-5 text-lg text-cream/75 leading-relaxed max-w-lg">${f.desc}</p>
+          <h3 class="font-display wide text-sm mt-10 mb-3 text-cream/60">Ingredients</h3>
+          <dl class="grid sm:grid-cols-2 gap-3">${items.map(([g, n, d]) => `<div class="rounded-2xl bg-ink/60 border border-white/10 p-4">
+            <dt class="text-[11px] tracking-widest uppercase" style="color:${f.color}">${g}</dt><dd class="font-bold mt-1">${n}</dd><dd class="text-sm text-cream/60 mt-1">${d}</dd></div>`).join('')}</dl>
+          <p class="mt-4 text-xs text-cream/45">This is the intended recipe. The finished flavour will be confirmed through brewing and tasting.</p>
+        </div>
+      </div></article>`;
+  }).join('');
 }
 
 /* ================= SHOP ================= */
 function renderShop() {
-  $('#bundles').innerHTML = BUNDLES.map((b) => `
-    <article class="${b.main ? 'md:col-span-2 bg-burg' : 'bg-esp'} rounded-3xl p-8 flex flex-col justify-between gap-6">
-      <div><h3 class="font-display wide text-3xl">${b.name}</h3><p class="mt-3 text-cream/75 max-w-sm">${b.desc}</p></div>
-      <div class="flex items-center justify-between gap-4"><span class="font-display wide text-3xl">${money(b.price)}</span>
-      <button class="btn" data-add="${b.id}">Add to basket</button></div></article>`).join('');
+  $('#bundles').innerHTML = `<article class="bg-burg rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div class="flex items-center gap-5"><div class="flex gap-1 w-24">${FLAVOURS.map((f) => `<div class="w-1/2">${canSVG(f)}</div>`).join('')}</div>
+    <div><h3 class="font-display wide text-3xl">${BUNDLE.name}</h3><p class="mt-2 text-cream/75 max-w-sm">${BUNDLE.desc}</p></div></div>
+    <div class="flex items-center gap-5"><span class="font-display wide text-3xl">${money(BUNDLE.price)}</span><button class="btn" data-add-bundle>Add to basket</button></div></article>`;
   $('#product-grid').innerHTML = FLAVOURS.map((f) => `
-    <article class="bg-char rounded-3xl p-6 flex flex-col border border-white/5">
-      <div class="w-24 mx-auto">${canSVG(f)}</div>
-      <h3 class="font-display wide text-lg mt-4" style="color:${f.color}">${f.name}</h3>
-      <p class="text-sm text-cream/65 mt-2 flex-1">${f.desc}</p>
-      <p class="text-xs text-cream/45 mt-3">${ABV} ABV · 330ml can${f.allergen ? ' · ' + f.allergen : ''}</p>
-      <select class="mt-4 bg-ink border border-white/15 rounded-full px-4 py-2 text-sm" data-pack="${f.id}" aria-label="Pack size for ${f.name}">
-        ${Object.entries(PACKS).map(([k, p]) => `<option value="${k}">${p.label} · ${money(p.price)}</option>`).join('')}</select>
-      <button class="btn mt-3 !py-3" data-add-flavour="${f.id}">Add to basket</button></article>`).join('');
+    <article class="bg-char rounded-3xl p-6 flex gap-5 border border-white/5">
+      <div class="w-20 shrink-0">${canSVG(f)}</div>
+      <div class="flex flex-col flex-1">
+        <h3 class="font-display wide text-lg" style="color:${f.color}">${f.name}</h3>
+        <p class="text-sm text-cream/65 mt-2 flex-1">${f.tag}</p>
+        <select class="mt-4 bg-ink border border-white/15 rounded-full px-4 py-2 text-sm" data-pack="${f.id}" aria-label="Pack size for ${f.name}">
+          ${Object.entries(PACKS).map(([k, p]) => `<option value="${k}">${p.label} · ${money(p.price)}</option>`).join('')}</select>
+        <button class="btn mt-3 !py-3" data-add-flavour="${f.id}">Add to basket</button>
+      </div></article>`).join('');
 }
 
 /* ================= BASKET ================= */
@@ -149,20 +129,16 @@ const Cart = {
 
 /* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  initAgeGate(); renderLists(); renderFlavours(); renderTaste(); renderShop(); Cart.load(); Cart.update();
-
-  // One delegated click handler for all dynamic buttons
+  initAgeGate(); renderFlavours(); renderShop(); Cart.load(); Cart.update();
   document.addEventListener('click', (e) => {
-    const t = (sel) => e.target.closest(sel);
-    if (t('[data-flavour]')) setFlavour(t('[data-flavour]').dataset.flavour);
-    if (t('[data-add]')) { const b = BUNDLES.find((x) => x.id === t('[data-add]').dataset.add); Cart.add(b.id, b.name, b.price); }
+    const t = (sel) => e.target.closest(sel);   // one delegated handler for dynamic buttons
+    if (t('[data-add-bundle]')) Cart.add(BUNDLE.id, BUNDLE.name, BUNDLE.price);
     if (t('[data-add-flavour]')) {
       const f = fl(t('[data-add-flavour]').dataset.addFlavour), k = document.querySelector(`[data-pack="${f.id}"]`).value, p = PACKS[k];
-      Cart.add(`${f.id}:${k}`, `${f.name} ${p.label}`, p.price);
+      Cart.add(`${f.id}:${k}`, `${f.name}, ${p.label}`, p.price);
     }
     if (t('[data-qty]')) Cart.change(t('[data-qty]').dataset.qty, +t('[data-qty]').dataset.d);
   });
-  $('#compare').addEventListener('change', (e) => { state.compare = e.target.checked; renderTaste(); });
   $('#cart-toggle').addEventListener('click', () => Cart.open());
   $('#cart-close').addEventListener('click', () => Cart.close());
   $('#cart-overlay').addEventListener('click', () => Cart.close());
