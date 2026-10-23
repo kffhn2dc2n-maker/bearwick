@@ -4,11 +4,11 @@
 /* ================= DATA ================= */
 // No ABV, tasting scores, nutrition or health claims: none are confirmed yet.
 const FLAVOURS = [
-  { id:'blackcurrant', name:'Blackcurrant Stout', lines:['BLACKCURRANT'], color:'#9b6be0', can:'#6d3fb8',
+  { id:'blackcurrant', name:'Blackcurrant Stout', lines:[['BLACKCURRANT','a'],['STOUT','c']], color:'#9b6be0', can:'#6d3fb8',
     tag:'Dark. Fruity. Balanced.',
     desc:'A smooth stout with a distinctive blackcurrant character. Fruity and easy to drink, with the roasted malt that keeps it properly stout.',
     fruit:['Blackcurrant','Gives the fruity, slightly tart character that sets this stout apart.'] },
-  { id:'cherry', name:'Cherry & Vanilla Stout', lines:['CHERRY','& VANILLA'], color:'#d1405a', can:'#a3182f',
+  { id:'cherry', name:'Cherry & Vanilla Stout', lines:[['CHERRY &','a'],['VANILLA','c'],['STOUT','c']], color:'#d1405a', can:'#a3182f',
     tag:'Smooth. Rounded. Distinctive.',
     desc:'Cherry fruitiness softened by vanilla. Smooth and balanced, aiming to be rounded rather than sweet or dessert-like.',
     fruit:['Cherry and vanilla','Cherry brings the fruit; vanilla is there to round it off and keep it smooth.'] }
@@ -27,27 +27,32 @@ const BUNDLE = { id:'mixed12', name:'Mixed 12-Pack', price:27, desc:'Six of each
 /* ================= HELPERS ================= */
 const $ = (s) => document.querySelector(s);
 const money = (n) => '£' + n.toFixed(2);
+const state = { mascot: 'a' };   // default mascot: 'a' emblem, 'b' character, 'c' minimal
+const CREAM = '#efe3cf';
 const fl = (id) => FLAVOURS.find((f) => f.id === id);
 
 /* ================= CAN ARTWORK =================
-   Realistic aluminium can: black body, metal rims, highlight, bear mascot, wordmark,
-   restrained flavour accent, and a Warwick castle skyline band. */
+   Satin near-black can, cream Verdana type, one restrained flavour accent, the active mascot.
+   Deliberately no fruit, landscapes or effects. Labelled as a concept design. */
 function canSVG(f) {
-  const name = f.lines.map((l, i) => `<text x="60" y="${150 + i * 10}" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="700" font-size="7.5" fill="${f.color}" letter-spacing="1">${l}</text>`).join('');
-  return `<svg viewBox="0 0 120 246" class="w-full h-auto" role="img" aria-label="BEARWICK ${f.name} can">
+  const txt = f.lines.map(([t, k], i) => {
+    const big = i === 0 || t !== 'STOUT';
+    return `<text x="60" y="${132 + i * 12}" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-weight="700" font-size="${t === 'STOUT' ? 5.6 : t.length > 10 ? 6.4 : 8}" fill="${k === 'a' ? f.color : CREAM}" letter-spacing="${t === 'STOUT' ? 3 : .6}">${t}</text>`;
+  }).join('');
+  return `<svg viewBox="0 0 120 246" class="w-full h-auto" role="img" aria-label="BEARWICK ${f.name} concept can">
     <defs>
-      <linearGradient id="body-${f.id}" x1="0" x2="1"><stop offset="0" stop-color="#030303"/><stop offset=".2" stop-color="#2e2e2e"/><stop offset=".34" stop-color="#0e0e0e"/><stop offset=".78" stop-color="#0a0a0a"/><stop offset=".93" stop-color="#262626"/><stop offset="1" stop-color="#030303"/></linearGradient>
-      <linearGradient id="metal" x1="0" x2="1"><stop offset="0" stop-color="#6b6b6b"/><stop offset=".35" stop-color="#e4e4e4"/><stop offset=".65" stop-color="#9a9a9a"/><stop offset="1" stop-color="#5a5a5a"/></linearGradient>
+      <linearGradient id="body-${f.id}" x1="0" x2="1"><stop offset="0" stop-color="#050505"/><stop offset=".25" stop-color="#1c1c1c"/><stop offset=".5" stop-color="#101010"/><stop offset=".85" stop-color="#171717"/><stop offset="1" stop-color="#050505"/></linearGradient>
+      <linearGradient id="rim" x1="0" x2="1"><stop offset="0" stop-color="#5d5d5d"/><stop offset=".4" stop-color="#b9b9b9"/><stop offset="1" stop-color="#555"/></linearGradient>
     </defs>
     <path d="M18 24Q18 15 28 13H92Q102 15 102 24V222Q102 231 92 233H28Q18 231 18 222Z" fill="url(#body-${f.id})"/>
-    <rect x="24" y="8" width="72" height="9" rx="3.5" fill="url(#metal)"/><rect x="24" y="230" width="72" height="9" rx="3.5" fill="url(#metal)"/>
-    <rect x="25" y="26" width="5" height="194" rx="2.5" fill="#fff" opacity=".12"/>
-    <use href="#bear" x="34" y="30" width="52" height="68" style="color:#f0e6d6;--cut:#0b0b0b"/>
-    <text x="60" y="120" text-anchor="middle" font-family="Archivo,sans-serif" font-stretch="125%" font-weight="800" font-size="13" fill="#f0e6d6" letter-spacing="1.2">BEARWICK</text>
-    <text x="60" y="132" text-anchor="middle" font-family="Figtree,sans-serif" font-size="6" fill="#f0e6d6" letter-spacing="3.5">STOUT</text>
-    <rect x="44" y="137" width="32" height="1.4" fill="${f.can}"/>
-    ${name}
-    <g transform="translate(0,28)"><path fill="${f.can}" d="M18 202V160h8v-5h5v5h5v-14h5v-4h6v4h5v14h5v-5h5v5h6v-9h6v9h28v42z"/></g>
+    <rect x="24" y="8" width="72" height="9" rx="3.5" fill="url(#rim)"/><rect x="24" y="230" width="72" height="9" rx="3.5" fill="url(#rim)"/>
+    <rect x="25" y="26" width="4" height="194" rx="2" fill="#fff" opacity=".07"/>
+    <use href="#bear-${state.mascot}" x="32" y="26" width="56" height="64" style="color:${CREAM};--cut:#0e0e0e"/>
+    <text x="60" y="109" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-weight="700" font-size="11" fill="${CREAM}" letter-spacing="1.2">BEARWICK</text>
+    <rect x="46" y="116" width="28" height="1.3" fill="${f.can}"/>
+    ${txt}
+    <rect x="18" y="204" width="84" height="7" fill="${f.can}"/>
+    <text x="60" y="224" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-size="3.6" fill="${CREAM}" opacity=".5" letter-spacing="1.5">CONCEPT DESIGN</text>
   </svg>`;
 }
 
@@ -105,6 +110,26 @@ function renderShop() {
       </div></article>`).join('');
 }
 
+/* ================= MASCOT STUDIO ================= */
+const MASCOTS = [
+  ['a', 'Option A: Premium emblem', 'Bust with the keg peeking over the shoulder. Keeps the face and expression readable at can size.'],
+  ['b', 'Option B: Full-body character', 'The whole bear, off-balance with the keg strapped on. The most personality, best for merch and social.'],
+  ['c', 'Option C: Minimal symbol', 'A simple side-on silhouette. The most understated, with the least expression.']
+];
+function renderMascots() {
+  $('#mascot-options').innerHTML = MASCOTS.map(([id, title, blurb]) => `
+    <article class="rounded-3xl p-6 border ${id === state.mascot ? 'border-cream/70 bg-char' : 'border-white/10 bg-char/50'}">
+      <div class="h-48 rounded-2xl bg-ink flex items-center justify-center"><svg class="h-40 w-40" style="color:${CREAM};--cut:#0c0a0a"><use href="#bear-${id}"/></svg></div>
+      <div class="mt-3 flex items-center gap-3"><div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background:${CREAM}"><svg class="w-9 h-9" style="color:#0c0a0a;--cut:${CREAM}"><use href="#bear-${id}"/></svg></div><span class="text-xs text-cream/50">One-colour test</span></div>
+      <h3 class="font-display wide text-sm mt-4">${title}</h3><p class="mt-2 text-sm text-cream/65">${blurb}</p>
+      <button class="${id === state.mascot ? 'btn' : 'btn-ghost'} mt-4 !py-2.5 !px-5" data-mascot-pick="${id}">${id === state.mascot ? 'In use' : 'Use on cans'}</button></article>`).join('');
+}
+function applyMascot(id) {
+  state.mascot = id;
+  document.querySelectorAll('use[data-mascot]').forEach((u) => u.setAttribute('href', '#bear-' + id));   // header, story, footer, age gate
+  renderFlavours(); renderShop(); renderMascots();
+}
+
 /* ================= BASKET ================= */
 const Cart = {
   items: {},   // { key: { name, price, qty } }
@@ -129,7 +154,7 @@ const Cart = {
 
 /* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  initAgeGate(); renderFlavours(); renderShop(); Cart.load(); Cart.update();
+  initAgeGate(); applyMascot(state.mascot); Cart.load(); Cart.update();
   document.addEventListener('click', (e) => {
     const t = (sel) => e.target.closest(sel);   // one delegated handler for dynamic buttons
     if (t('[data-add-bundle]')) Cart.add(BUNDLE.id, BUNDLE.name, BUNDLE.price);
@@ -137,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const f = fl(t('[data-add-flavour]').dataset.addFlavour), k = document.querySelector(`[data-pack="${f.id}"]`).value, p = PACKS[k];
       Cart.add(`${f.id}:${k}`, `${f.name}, ${p.label}`, p.price);
     }
+    if (t('[data-mascot-pick]')) applyMascot(t('[data-mascot-pick]').dataset.mascotPick);
     if (t('[data-qty]')) Cart.change(t('[data-qty]').dataset.qty, +t('[data-qty]').dataset.d);
   });
   $('#cart-toggle').addEventListener('click', () => Cart.open());
