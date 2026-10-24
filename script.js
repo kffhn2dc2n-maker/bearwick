@@ -1,5 +1,5 @@
 /* BEARWICK: page behaviour (vanilla JS)
-   Order: DATA -> can artwork -> age gate -> flavour sections -> shop -> basket -> init */
+   Order: DATA -> can artwork -> age gate -> flavour sections -> init *
 
 /* ================= DATA ================= */
 // No ABV, tasting scores, nutrition or health claims: none are confirmed yet.
@@ -21,40 +21,13 @@ const BASE_INGREDIENTS = [
   ['Hops', 'East Kent Goldings', 'A classic English hop, intended for gentle balance rather than sharp bitterness.'],
   ['Yeast', 'S-04 English Ale Yeast (dry)', 'A dry English ale yeast, intended for a clean, dependable ferment.']
 ];
-const PACKS = { single:{label:'Single can', price:2.75}, four:{label:'4-pack', price:9.75}, twelve:{label:'12-pack', price:26} };
-const BUNDLE = { id:'mixed12', name:'Mixed 12-Pack', price:27, desc:'Six of each flavour. The easiest way to meet both.' };
 
 /* ================= HELPERS ================= */
 const $ = (s) => document.querySelector(s);
-const money = (n) => '£' + n.toFixed(2);
-const CREAM = '#efe3cf';
-const fl = (id) => FLAVOURS.find((f) => f.id === id);
 
 /* ================= CAN ARTWORK =================
-   Satin near-black can, cream Verdana type, one restrained flavour accent, the bear badge.
-   Deliberately no fruit, landscapes or effects. Labelled as a concept design. */
-function canSVG(f) {
-  if (window.BW && BW.active) return BW.can(BW.active, f, 'front');   // active concept from concepts.js
-  const txt = f.lines.map(([t, k], i) => {
-    const big = i === 0 || t !== 'STOUT';
-    return `<text x="60" y="${132 + i * 12}" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-weight="700" font-size="${t === 'STOUT' ? 5.6 : t.length > 10 ? 6.4 : 8}" fill="${k === 'a' ? f.color : CREAM}" letter-spacing="${t === 'STOUT' ? 3 : .6}">${t}</text>`;
-  }).join('');
-  return `<svg viewBox="0 0 120 246" class="w-full h-auto" role="img" aria-label="BEARWICK ${f.name} concept can">
-    <defs>
-      <linearGradient id="body-${f.id}" x1="0" x2="1"><stop offset="0" stop-color="#050505"/><stop offset=".25" stop-color="#1c1c1c"/><stop offset=".5" stop-color="#101010"/><stop offset=".85" stop-color="#171717"/><stop offset="1" stop-color="#050505"/></linearGradient>
-      <linearGradient id="rim" x1="0" x2="1"><stop offset="0" stop-color="#5d5d5d"/><stop offset=".4" stop-color="#b9b9b9"/><stop offset="1" stop-color="#555"/></linearGradient>
-    </defs>
-    <path d="M18 24Q18 15 28 13H92Q102 15 102 24V222Q102 231 92 233H28Q18 231 18 222Z" fill="url(#body-${f.id})"/>
-    <rect x="24" y="8" width="72" height="9" rx="3.5" fill="url(#rim)"/><rect x="24" y="230" width="72" height="9" rx="3.5" fill="url(#rim)"/>
-    <rect x="25" y="26" width="4" height="194" rx="2" fill="#fff" opacity=".07"/>
-    <image href="assets/bear-colour-transparent.png" x="30" y="24" width="60" height="62" preserveAspectRatio="xMidYMid meet"/>
-    <text x="60" y="109" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-weight="700" font-size="11" fill="${CREAM}" letter-spacing="1.2">BEARWICK</text>
-    <rect x="46" y="116" width="28" height="1.3" fill="${f.can}"/>
-    ${txt}
-    <rect x="18" y="204" width="84" height="7" fill="${f.can}"/>
-    <text x="60" y="224" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-size="3.6" fill="${CREAM}" opacity=".5" letter-spacing="1.5">CONCEPT DESIGN</text>
-  </svg>`;
-}
+   The Modern Heritage can is drawn in cans.js (loaded first). */
+function canSVG(f) { return BW.can('a', f, 'front'); }
 
 /* ================= AGE GATE ================= */
 function initAgeGate() {
@@ -92,63 +65,9 @@ function renderFlavours() {
   }).join('');
 }
 
-/* ================= SHOP ================= */
-function renderShop() {
-  $('#bundles').innerHTML = `<article class="bg-burg rounded-3xl p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-    <div class="flex items-center gap-5"><div class="flex gap-1 w-24">${FLAVOURS.map((f) => `<div class="w-1/2">${canSVG(f)}</div>`).join('')}</div>
-    <div><h3 class="font-display wide text-3xl">${BUNDLE.name}</h3><p class="mt-2 text-cream/75 max-w-sm">${BUNDLE.desc}</p></div></div>
-    <div class="flex items-center gap-5"><span class="font-display wide text-3xl">${money(BUNDLE.price)}</span><button class="btn" data-add-bundle>Add to basket</button></div></article>`;
-  $('#product-grid').innerHTML = FLAVOURS.map((f) => `
-    <article class="bg-char rounded-3xl p-6 flex gap-5 border border-white/5">
-      <div class="w-20 shrink-0">${canSVG(f)}</div>
-      <div class="flex flex-col flex-1">
-        <h3 class="font-display wide text-lg" style="color:${f.color}">${f.name}</h3>
-        <p class="text-sm text-cream/65 mt-2 flex-1">${f.tag}</p>
-        <select class="mt-4 bg-ink border border-white/15 rounded-full px-4 py-2 text-sm" data-pack="${f.id}" aria-label="Pack size for ${f.name}">
-          ${Object.entries(PACKS).map(([k, p]) => `<option value="${k}">${p.label} · ${money(p.price)}</option>`).join('')}</select>
-        <button class="btn mt-3 !py-3" data-add-flavour="${f.id}">Add to basket</button>
-      </div></article>`).join('');
-}
-
-/* ================= BASKET ================= */
-const Cart = {
-  items: {},   // { key: { name, price, qty } }
-  load() { try { this.items = JSON.parse(localStorage.getItem('bw_cart')) || {}; } catch (e) { this.items = {}; } },
-  add(key, name, price) { (this.items[key] ||= { name, price, qty: 0 }).qty++; this.update(); this.open(); },
-  change(key, d) { this.items[key].qty += d; if (this.items[key].qty <= 0) delete this.items[key]; this.update(); },
-  open()  { $('#cart-drawer').classList.remove('translate-x-full'); $('#cart-drawer').setAttribute('aria-hidden','false'); $('#cart-overlay').classList.remove('opacity-0','pointer-events-none'); },
-  close() { $('#cart-drawer').classList.add('translate-x-full'); $('#cart-drawer').setAttribute('aria-hidden','true'); $('#cart-overlay').classList.add('opacity-0','pointer-events-none'); },
-  update() {
-    try { localStorage.setItem('bw_cart', JSON.stringify(this.items)); } catch (e) {}
-    const rows = Object.entries(this.items);
-    const count = rows.reduce((s, [, i]) => s + i.qty, 0), total = rows.reduce((s, [, i]) => s + i.qty * i.price, 0);
-    $('#cart-count').textContent = count; $('#cart-total').textContent = money(total); $('#checkout-btn').disabled = !count;
-    $('#cart-items').innerHTML = count ? rows.map(([k, i]) => `<li class="flex items-center gap-4 bg-ink rounded-2xl p-4">
-      <div class="flex-1"><p class="font-display wide text-sm">${i.name}</p><p class="text-xs text-cream/55">${money(i.price)} each</p>
-        <div class="mt-2 flex items-center gap-3"><button class="w-7 h-7 rounded-full border border-white/20" data-qty="${k}" data-d="-1" aria-label="Fewer">&minus;</button>
-        <span>${i.qty}</span><button class="w-7 h-7 rounded-full border border-white/20" data-qty="${k}" data-d="1" aria-label="More">+</button></div></div>
-      <span class="font-bold">${money(i.price * i.qty)}</span></li>`).join('')
-      : '<li class="text-center text-cream/55 mt-10">Your basket is empty. The Mixed 12-Pack is a good start.</li>';
-  }
-};
-
 /* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  initAgeGate(); renderFlavours(); renderShop(); Cart.load(); Cart.update();
-  document.addEventListener('click', (e) => {
-    const t = (sel) => e.target.closest(sel);   // one delegated handler for dynamic buttons
-    if (t('[data-add-bundle]')) Cart.add(BUNDLE.id, BUNDLE.name, BUNDLE.price);
-    if (t('[data-add-flavour]')) {
-      const f = fl(t('[data-add-flavour]').dataset.addFlavour), k = document.querySelector(`[data-pack="${f.id}"]`).value, p = PACKS[k];
-      Cart.add(`${f.id}:${k}`, `${f.name}, ${p.label}`, p.price);
-    }
-    if (t('[data-qty]')) Cart.change(t('[data-qty]').dataset.qty, +t('[data-qty]').dataset.d);
-  });
-  $('#cart-toggle').addEventListener('click', () => Cart.open());
-  $('#cart-close').addEventListener('click', () => Cart.close());
-  $('#cart-overlay').addEventListener('click', () => Cart.close());
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && Cart.close());
-  $('#checkout-btn').addEventListener('click', () => alert('Demo only: connect Shopify, Stripe or your checkout of choice here.'));
+  initAgeGate(); renderFlavours();
   $('#menu-btn').addEventListener('click', () => { const m = $('#mobile-menu'); m.classList.toggle('hidden'); $('#menu-btn').setAttribute('aria-expanded', !m.classList.contains('hidden')); });
   $('#mobile-menu').addEventListener('click', () => $('#mobile-menu').classList.add('hidden'));
   $('#news-form').addEventListener('submit', (e) => { e.preventDefault(); $('#news-msg').textContent = 'Thanks, you are on the list (demo only, nothing was stored).'; e.target.reset(); });

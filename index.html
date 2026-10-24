@@ -31,8 +31,8 @@
   <header class="fixed top-0 inset-x-0 z-40 bg-gradient-to-b from-ink/90 to-transparent">
     <div class="max-w-7xl mx-auto px-5 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
       <nav class="hidden md:flex gap-8 text-xs tracking-[.2em] uppercase" aria-label="Main">
-        <a href="#top" class="hover:text-cream/60">Home</a><a href="#flavours" class="hover:text-cream/60">Flavours</a><a href="#concepts" class="hover:text-cream/60">Concepts</a>
-        <a href="#story" class="hover:text-cream/60">Our Story</a><a href="#shop" class="hover:text-cream/60">Shop</a>
+        <a href="#top" class="hover:text-cream/60">Home</a><a href="#flavours" class="hover:text-cream/60">Flavours</a><a href="#cans" class="hover:text-cream/60">The can</a>
+        <a href="#story" class="hover:text-cream/60">Our Story</a>
       </nav>
       <button id="menu-btn" class="md:hidden justify-self-start p-2" aria-label="Menu" aria-expanded="false">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -41,13 +41,10 @@
         <img src="assets/bear-colour-transparent.png" alt="" class="bear-halo h-10 w-auto" width="489" height="509">
         <span class="font-display wide text-2xl md:text-3xl font-bold tracking-[.12em]">BEARWICK</span>
       </a>
-      <button id="cart-toggle" class="relative justify-self-end p-2" aria-label="Open basket">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linejoin="round" d="M5 8h14l-1 12H6L5 8zM9 8a3 3 0 016 0"/></svg>
-        <span id="cart-count" class="absolute top-0 right-0 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-cream text-ink text-[11px] font-bold flex items-center justify-center">0</span>
-      </button>
+      <a href="#signup" class="justify-self-end text-xs tracking-[.2em] uppercase hover:text-cream/60">Updates</a>
     </div>
     <nav id="mobile-menu" class="hidden md:hidden bg-char px-5 py-4 space-y-3 text-sm tracking-[.2em] uppercase">
-      <a href="#flavours" class="block">Flavours</a><a href="#concepts" class="block">Concepts</a><a href="#story" class="block">Our Story</a><a href="#shop" class="block">Shop</a>
+      <a href="#flavours" class="block">Flavours</a><a href="#cans" class="block">The can</a><a href="#story" class="block">Our Story</a><a href="#signup" class="block">Updates</a>
     </nav>
   </header>
 
@@ -59,7 +56,7 @@
         <div class="rise">
           <h1 class="font-display wide font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.05]">Summer fruit.<br>Winter stout.<br><span id="hero-accent" class="text-cream/60">All year BEARWICK.</span></h1>
           <p class="mt-7 text-xl text-cream/80 max-w-md">A smooth stout with real fruit character. The fruitiness you love in summer, the stout you love in winter, in one can.</p>
-          <div class="mt-9 flex flex-wrap gap-3"><a href="#shop" class="btn">Shop BEARWICK</a><a href="#flavours" class="btn-ghost">Meet the flavours</a></div>
+          <div class="mt-9 flex flex-wrap gap-3"><a href="#signup" class="btn">Be first to taste it</a><a href="#flavours" class="btn-ghost">Meet the flavours</a></div>
         </div>
         <div><div id="hero-cans" class="flex justify-center items-end gap-2 sm:gap-6"></div><p class="text-center text-xs text-cream/45 mt-6">Concept can designs. Recipes are in development.</p></div>
       </div>
@@ -81,8 +78,8 @@
       <div id="flavour-sections"></div>
     </section>
 
-    <!-- ============ CAN CONCEPTS (rendered by concepts.js) ============ -->
-    <section id="concepts" class="border-b border-white/5"></section>
+    <!-- ============ THE CAN (rendered by cans.js) ============ -->
+    <section id="cans" class="border-b border-white/5"></section>
 
     <!-- ============ BRAND STORY ============ -->
     <section id="story" class="max-w-6xl mx-auto px-5 py-28 grid md:grid-cols-2 gap-12 items-center">
@@ -94,16 +91,8 @@
       <div class="flex justify-center"><img src="assets/bear-colour-transparent.png" alt="BEARWICK bear walking along with a crate of stout on its back" class="bear-halo w-full max-w-sm" width="489" height="509" loading="lazy"></div>
     </section>
 
-    <!-- ============ SHOP ============ -->
-    <section id="shop" class="max-w-7xl mx-auto px-5 py-24 border-t border-white/5">
-      <h2 class="font-display wide font-extrabold text-3xl md:text-5xl">Shop BEARWICK.</h2>
-      <p class="mt-3 text-xs text-cream/50">Concept pricing for demonstration only.</p>
-      <div id="bundles" class="mt-10"></div>
-      <div id="product-grid" class="mt-6 grid sm:grid-cols-2 gap-6"></div>
-    </section>
-
     <!-- ============ NEWSLETTER ============ -->
-    <section class="max-w-2xl mx-auto px-5 py-24 text-center">
+    <section id="signup" class="max-w-2xl mx-auto px-5 py-24 text-center">
       <h2 class="font-display wide font-extrabold text-3xl md:text-4xl">Be first to taste it.</h2>
       <p class="mt-3 text-cream/65">Launch news and first access. No spam.</p>
       <form id="news-form" class="mt-8 flex flex-col sm:flex-row gap-3">
@@ -125,22 +114,7 @@
     </div>
   </footer>
 
-  <!-- ============ BASKET DRAWER ============ -->
-  <div id="cart-overlay" class="fixed inset-0 z-50 bg-black/70 opacity-0 pointer-events-none transition-opacity duration-300"></div>
-  <aside id="cart-drawer" class="fixed top-0 right-0 z-[60] h-full w-full max-w-md bg-char border-l border-white/10 flex flex-col translate-x-full transition-transform duration-300" aria-label="Basket" aria-hidden="true">
-    <div class="flex items-center justify-between p-5 border-b border-white/10">
-      <h2 class="font-display wide text-xl">Your basket</h2>
-      <button id="cart-close" class="p-2" aria-label="Close basket"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
-    </div>
-    <ul id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4"></ul>
-    <div class="p-5 border-t border-white/10">
-      <div class="flex justify-between text-lg"><span>Total</span><span id="cart-total" class="font-bold">£0.00</span></div>
-      <button id="checkout-btn" class="btn w-full mt-4">Proceed to checkout</button>
-      <p class="text-xs text-cream/45 mt-3 text-center">Demo checkout. No payment is taken.</p>
-    </div>
-  </aside>
-
-  <script src="concepts.js"></script>
+  <script src="cans.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
