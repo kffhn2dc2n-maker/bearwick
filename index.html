@@ -16,81 +16,6 @@
 </head>
 <body class="bg-ink text-cream font-sans antialiased">
 
-  <!-- Three mascot treatments (one-colour vectors, colour set by CSS "color"; detail cut-outs use --cut).
-       A = premium emblem, B = full-body character, C = minimal symbol. Switch them in the #mascot section. -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <!-- A: Premium emblem. Bust with keg peeking over the shoulder, two chest straps -->
-    <symbol id="bear-a" viewBox="0 0 100 100">
-      <clipPath id="bw-ra"><circle cx="50" cy="50" r="43"/></clipPath>
-      <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" stroke-width="2.4"/>
-      <g clip-path="url(#bw-ra)" stroke-linejoin="round">
-        <g transform="rotate(-12 18 62)" stroke="var(--cut,#0c0a0a)" stroke-width="2.2"><path d="M5 40Q1 62 5 86H30Q34 62 30 40Z" fill="currentColor"/><path d="M3 51Q17 54 32 51M2 63Q17 66 33 63M3 75Q17 78 32 75" fill="none"/><path d="M5 40Q12 19 28 15L29 42Q22 42 18 48Q10 44 5 40Z" fill="currentColor"/></g>
-        <path d="M22 100Q22 66 40 54L62 52Q72 74 78 100Z" fill="currentColor" stroke="var(--cut,#0c0a0a)" stroke-width="2.2"/>
-        <path d="M33 56L68 100" stroke="var(--cut,#0c0a0a)" stroke-width="4.5"/>
-        <circle cx="45" cy="31" r="4.6" fill="currentColor" stroke="var(--cut,#0c0a0a)" stroke-width="1.6"/>
-        <path d="M38 44Q40 30 54 29Q64 29 68 37L90 46Q94 51 89 56L66 58Q52 62 42 56Z" fill="currentColor" stroke="var(--cut,#0c0a0a)" stroke-width="2.2"/>
-      </g>
-      <g fill="var(--cut,#0c0a0a)"><path d="M60.5 41h6a3 3 0 01-6 0z"/><path d="M59 38.5L68 40.5" stroke="var(--cut,#0c0a0a)" stroke-width="1.7"/><ellipse cx="90" cy="49" rx="2.2" ry="1.8"/>
-        <path d="M67 56Q77 59.5 86 54.5" stroke="var(--cut,#0c0a0a)" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
-    </symbol>
-    <!-- B: Full-body character, slightly off-balance, keg rucksack with straps -->
-    <symbol id="bear-b" viewBox="0 0 100 130"><g transform="rotate(-4 50 124)" stroke-linejoin="round">
-      <path d="M46 92L40 124H58L58 100L62 124H78L72 92Z" fill="currentColor"/>
-      <path d="M44 42Q38 66 42 96L72 96Q74 70 66 46Z" fill="currentColor"/>
-      <path d="M60 50L70 72L68 90L60 88L60 70Z" fill="currentColor"/>
-      <circle cx="59" cy="18" r="4" fill="currentColor"/>
-      <path d="M50 30Q50 16 64 15Q72 16 75 22L94 31Q97 35 93 38L76 40Q70 48 58 48Q50 44 50 30Z" fill="currentColor"/>
-      <g stroke="var(--cut,#0c0a0a)" stroke-width="2.2"><path d="M12 40Q7 64 12 90H38Q43 64 38 40Z" fill="currentColor"/><path d="M10 52Q25 56 40 52M9 65Q25 69 41 65M10 78Q25 82 40 78" fill="none"/></g>
-      <path d="M38 48Q54 42 64 58M38 84Q54 90 62 80" stroke="var(--cut,#0c0a0a)" stroke-width="3.2" fill="none"/>
-      <path d="M68 25h6a3 3 0 01-6 0z" fill="var(--cut,#0c0a0a)"/><path d="M66.5 22.5L76 24.5" stroke="var(--cut,#0c0a0a)" stroke-width="1.7"/>
-      <ellipse cx="94.5" cy="34" rx="2.2" ry="1.8" fill="var(--cut,#0c0a0a)"/><path d="M78 39Q86 41.5 92 37.5" stroke="var(--cut,#0c0a0a)" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>
-    </symbol>
-    <!-- C: Minimal symbol. Side-on bear on all fours, keg on its back, one strap -->
-    <symbol id="bear-c" viewBox="0 0 100 70"><g stroke-linejoin="round">
-      <path d="M8 44Q8 28 28 24Q46 18 62 27Q70 22 78 24Q85 26 88 33L98 41Q99 46 94 47L86 47Q82 49 80 53L80 66H69L67 55H56L55 66H44L43 55H30L28 66H17L16 55Q8 55 8 44Z" fill="currentColor"/>
-      <circle cx="78" cy="22" r="3.6" fill="currentColor"/>
-      <g stroke="var(--cut,#0c0a0a)" stroke-width="2"><path d="M20 12Q17 22 20 32H58Q61 22 58 12Z" fill="currentColor"/><path d="M29 12Q27 22 29 32M49 12Q51 22 49 32" fill="none"/></g>
-      <path d="M26 33Q24 44 27 54M54 33Q56 44 53 55" stroke="var(--cut,#0c0a0a)" stroke-width="2.4" fill="none"/>
-      <path d="M84.5 32h5a2.5 2.5 0 01-5 0z" fill="var(--cut,#0c0a0a)"/><path d="M83.5 30L91 31.6" stroke="var(--cut,#0c0a0a)" stroke-width="1.4"/>
-      <ellipse cx="97.5" cy="42" rx="1.9" ry="1.5" fill="var(--cut,#0c0a0a)"/><path d="M88 47Q92 49 96 46.5" stroke="var(--cut,#0c0a0a)" stroke-width="1.3" fill="none" stroke-linecap="round"/></g>
-    </symbol>
-  </svg>
-
-  <!-- ============ AGE GATE (UK 18+) ============ -->
-  <div id="age-gate" class="fixed inset-0 z-[100] hidden items-center justify-center bg-ink/95 p-6" role="dialog" aria-modal="true" aria-labelledby="age-title">
-    <div class="max-w-md text-center bg-char border border-white/10 rounded-3xl p-10">
-      <svg class="w-16 h-16 mx-auto text-cream"><use data-mascot href="#bear-a"/></svg>
-      <h2 id="age-title" class="font-display wide text-3xl mt-5">Are you 18 or over?</h2>
-      <p class="text-cream/60 mt-3 text-sm">You must be of legal drinking age to enter.</p>
-      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center"><button id="age-yes" class="btn">Yes, enter</button><button id="age-no" class="btn-ghost">No</button></div>
-      <p id="age-denied" class="hidden mt-5 text-sm text-cream/70">Sorry, you must be of legal drinking age to view this site.</p>
-    </div>
-  </div>
-
-  <!-- ============ HEADER ============ -->
-  <header class="fixed top-0 inset-x-0 z-40 bg-gradient-to-b from-ink/90 to-transparent">
-    <div class="max-w-7xl mx-auto px-5 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
-      <nav class="hidden md:flex gap-8 text-xs tracking-[.2em] uppercase" aria-label="Main">
-        <a href="#top" class="hover:text-cream/60">Home</a><a href="#flavours" class="hover:text-cream/60">Flavours</a>
-        <a href="#mascot" class="hover:text-cream/60">Mascot</a><a href="#story" class="hover:text-cream/60">Our Story</a><a href="#shop" class="hover:text-cream/60">Shop</a>
-      </nav>
-      <button id="menu-btn" class="md:hidden justify-self-start p-2" aria-label="Menu" aria-expanded="false">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
-      </button>
-      <a href="#top" class="flex items-center gap-3 justify-self-center">
-        <svg class="w-9 h-10"><use data-mascot href="#bear-a"/></svg>
-        <span class="font-display wide text-2xl md:text-3xl font-bold tracking-[.12em]">BEARWICK</span>
-      </a>
-      <button id="cart-toggle" class="relative justify-self-end p-2" aria-label="Open basket">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linejoin="round" d="M5 8h14l-1 12H6L5 8zM9 8a3 3 0 016 0"/></svg>
-        <span id="cart-count" class="absolute top-0 right-0 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-cream text-ink text-[11px] font-bold flex items-center justify-center">0</span>
-      </button>
-    </div>
-    <nav id="mobile-menu" class="hidden md:hidden bg-char px-5 py-4 space-y-3 text-sm tracking-[.2em] uppercase">
-      <a href="#flavours" class="block">Flavours</a><a href="#mascot" class="block">Mascot</a><a href="#story" class="block">Our Story</a><a href="#shop" class="block">Shop</a>
-    </nav>
-  </header>
-
   <main id="top">
     <!-- ============ HERO ============ -->
     <section class="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-esp via-[#1a100d] to-ink pt-24">
@@ -140,7 +65,7 @@
         <p class="mt-6 text-cream/75 leading-relaxed">We think stout has been stuck in winter for too long. Fruit drinks get the sunshine; stout gets the cold. We wanted one drink that does both.</p>
         <p class="mt-4 text-cream/75 leading-relaxed">BEARWICK is rooted in Warwickshire, and so is the bear. He carries his keg wherever the party is, in any season.</p>
       </div>
-      <div class="flex justify-center"><svg class="w-64 h-80 text-cream/90"><use data-mascot href="#bear-a"/></svg></div>
+      <div class="flex justify-center"><img src="bear-colour-transparent.png" alt="BEARWICK bear" class="bear-art bear-art-feature" /></div>
     </section>
 
     <!-- ============ SHOP ============ -->
@@ -162,32 +87,6 @@
       <p id="news-msg" class="mt-4 text-sm text-cream/70 min-h-[1.25rem]"></p>
     </section>
   </main>
-
-  <!-- ============ FOOTER ============ -->
-  <footer class="border-t border-white/10">
-    <div class="max-w-6xl mx-auto px-5 py-14">
-      <div class="flex flex-col sm:flex-row justify-between gap-6">
-        <div class="flex items-center gap-3"><svg class="w-8 h-10"><use data-mascot href="#bear-a"/></svg><span class="font-display wide text-2xl tracking-[.12em]">BEARWICK</span></div>
-        <div class="flex gap-6 text-sm"><a href="#" class="hover:text-cream/60">Instagram</a><a href="#" class="hover:text-cream/60">TikTok</a><a href="#" class="hover:text-cream/60">X</a></div>
-      </div>
-      <p class="mt-10 text-xs text-cream/45 leading-relaxed max-w-4xl">BEARWICK is a concept brand and its recipes are still in development. Ingredients shown describe the intended recipe direction only and are not final product claims.</p>
-    </div>
-  </footer>
-
-  <!-- ============ BASKET DRAWER ============ -->
-  <div id="cart-overlay" class="fixed inset-0 z-50 bg-black/70 opacity-0 pointer-events-none transition-opacity duration-300"></div>
-  <aside id="cart-drawer" class="fixed top-0 right-0 z-[60] h-full w-full max-w-md bg-char border-l border-white/10 flex flex-col translate-x-full transition-transform duration-300" aria-label="Basket" aria-hidden="true">
-    <div class="flex items-center justify-between p-5 border-b border-white/10">
-      <h2 class="font-display wide text-xl">Your basket</h2>
-      <button id="cart-close" class="p-2" aria-label="Close basket"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
-    </div>
-    <ul id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4"></ul>
-    <div class="p-5 border-t border-white/10">
-      <div class="flex justify-between text-lg"><span>Total</span><span id="cart-total" class="font-bold">£0.00</span></div>
-      <button id="checkout-btn" class="btn w-full mt-4">Proceed to checkout</button>
-      <p class="text-xs text-cream/45 mt-3 text-center">Demo checkout. No payment is taken.</p>
-    </div>
-  </aside>
 
   <script src="script.js"></script>
 </body>
