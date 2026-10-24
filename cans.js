@@ -38,15 +38,4 @@
 
   const BW = window.BW = { active: 'a', can };
 
-  function render() {
-    const host = document.getElementById('cans'); if (!host) return;
-    host.innerHTML = `<div class="max-w-6xl mx-auto px-5 py-24">
-      <h2 class="font-display wide font-extrabold text-3xl md:text-5xl">Two flavours. One bear.</h2>
-      <p class="mt-4 text-cream/65 max-w-xl">Near-black cans with a brass-framed bear and one deep fruit accent each. Dark, fruity and properly stout.</p>
-      <div class="mt-12 grid md:grid-cols-2 gap-5">${FLAVOURS.map((f) => `<a href="#${f.id}" class="stage block rounded-3xl px-4 pt-10 pb-6"><div class="flex items-end justify-center gap-3 sm:gap-6">
-        <div class="w-28 sm:w-40 can-shadow">${can('a', f, 'front')}</div><div class="w-24 sm:w-32 can-shadow">${can('a', f, 'side')}</div></div>
-        <p class="mt-6 text-center text-sm tracking-widest uppercase" style="color:${f.color}">${f.name}</p><p class="mt-1 text-center text-xs text-cream/55">${f.tag}</p></a>`).join('')}</div></div>`;
-  }
-  BW.render = render;
-  document.addEventListener('DOMContentLoaded', render);
 })();

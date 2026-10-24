@@ -1,5 +1,5 @@
 /* BEARWICK: page behaviour (vanilla JS)
-   Order: DATA -> can artwork -> age gate -> flavour sections -> init *
+   Order: DATA -> can artwork -> age gate -> flavour sections -> profiles -> shop -> basket -> init *
 
 /* ================= DATA ================= */
 // No ABV, tasting scores, nutrition or health claims: none are confirmed yet.
@@ -22,8 +22,23 @@ const BASE_INGREDIENTS = [
   ['Yeast', 'S-04 English Ale Yeast (dry)', 'A dry English ale yeast, intended for a clean, dependable ferment.']
 ];
 
+
+/* ================= EDITABLE SETTINGS =================
+   1) PRICES: change the price per can (GBP) here. These are provisional demonstration prices only.
+   2) PROFILES: Top Trumps-style scores out of 10. Early brand-development estimates, not measured or tasted results.
+      Add/remove rows in PROFILE_ATTRS to change which attributes appear. */
+const PRICES = { blackcurrant: 3.50, cherry: 3.50 };
+const MAX_QTY = 99;
+const PROFILE_ATTRS = [['heaviness', 'Heaviness'], ['fruitiness', 'Fruitiness'], ['smoothness', 'Smoothness'], ['roasted', 'Roasted character'], ['sweetness', 'Sweetness']];
+const PROFILES = {
+  blackcurrant: { heaviness: 7, fruitiness: 6, smoothness: 7, roasted: 8, sweetness: 3 },
+  cherry:       { heaviness: 6, fruitiness: 7, smoothness: 9, roasted: 6, sweetness: 5 }
+};
+
 /* ================= HELPERS ================= */
 const $ = (s) => document.querySelector(s);
+const money = (n) => '£' + n.toFixed(2);
+const fl = (id) => FLAVOURS.find((f) => f.id === id);
 
 /* ================= CAN ARTWORK =================
    The Modern Heritage can is drawn in cans.js (loaded first). */
@@ -65,9 +80,79 @@ function renderFlavours() {
   }).join('');
 }
 
+/* ================= FLAVOUR PROFILES (Top Trumps style) ================= */
+function renderProfiles() {
+  $('#profile-grid').innerHTML = FLAVOURS.map((f, i) => `
+    <article class="rounded-3xl border border-white/15 bg-gradient-to-b from-char to-ink p-5" style="box-shadow:0 0 0 3px ${f.can}66">
+      <div class="flex items-center justify-between"><h3 class="font-display wide text-lg">${f.name}</h3><span class="font-display text-3xl font-extrabold" style="color:${f.color}" aria-hidden="true">0${i + 1}</span></div>
+      <div class="mt-4 rounded-2xl bg-ink flex justify-center py-5"><div class="w-24">${canSVG(f)}</div></div>
+      <dl class="mt-5 space-y-3">${PROFILE_ATTRS.map(([k, label]) => { const v = PROFILES[f.id][k];
+        return `<div><div class="flex justify-between text-xs tracking-widest uppercase"><dt>${label}</dt><dd class="font-bold" style="color:${f.color}">${v}/10</dd></div>
+        <div class="bar mt-1.5" role="img" aria-label="${label}: ${v} out of 10"><i style="width:${v * 10}%;background:${f.color}"></i></div></div>`; }).join('')}</dl>
+      <p class="mt-5 text-[11px] text-cream/45">Preliminary brand-development estimate. Not a measured or tasted result.</p>
+    </article>`).join('');
+}
+
+/* ================= SHOP (concept preview) ================= */
+function renderShop() {
+  $('#product-grid').innerHTML = FLAVOURS.map((f) => `
+    <article class="bg-char rounded-3xl p-6 flex gap-5 border border-white/5">
+      <div class="w-24 shrink-0">${canSVG(f)}</div>
+      <div class="flex flex-col flex-1">
+        <h3 class="font-display wide text-lg" style="color:${f.color}">${f.name}</h3>
+        <p class="text-sm text-cream/65 mt-2">${f.tag}</p>
+        <p class="mt-3 font-display text-2xl font-bold">${money(PRICES[f.id])} <span class="text-xs font-normal text-cream/50">per can · provisional</span></p>
+        <div class="mt-4 flex items-center gap-2" role="group" aria-label="Quantity of ${f.name}">
+          <button type="button" class="w-9 h-9 rounded-full border border-white/25" data-step="${f.id}" data-d="-1" aria-label="Fewer ${f.name}">&minus;</button>
+          <input id="qty-${f.id}" type="number" inputmode="numeric" min="1" max="${MAX_QTY}" value="1" class="w-14 text-center bg-ink border border-white/15 rounded-full py-2" aria-label="Quantity">
+          <button type="button" class="w-9 h-9 rounded-full border border-white/25" data-step="${f.id}" data-d="1" aria-label="More ${f.name}">+</button>
+        </div>
+        <button type="button" class="btn mt-4 !py-3" data-add="${f.id}">Add to basket</button>
+      </div></article>`).join('');
+}
+const readQty = (id) => { const q = parseInt($('#qty-' + id).value, 10); return Number.isFinite(q) ? Math.min(Math.max(q, 1), MAX_QTY) : 1; };   // zero, negative or blank becomes 1
+
+/* ================= BASKET ================= */
+const Cart = {
+  items: {},   // { flavourId: quantity }  (names and prices are always read from FLAVOURS/PRICES)
+  load() { try { const s = JSON.parse(localStorage.getItem('bw_cart2')) || {}; this.items = {}; for (const id in s) if (PRICES[id] && s[id] > 0) this.items[id] = Math.min(Math.floor(s[id]), MAX_QTY); } catch (e) { this.items = {}; } },
+  save() { try { localStorage.setItem('bw_cart2', JSON.stringify(this.items)); } catch (e) {} },
+  add(id, q) { this.items[id] = Math.min((this.items[id] || 0) + q, MAX_QTY); this.update(); this.open(); },
+  change(id, d) { this.items[id] = (this.items[id] || 0) + d; if (this.items[id] <= 0) delete this.items[id]; this.update(); },
+  remove(id) { delete this.items[id]; this.update(); },
+  open() { $('#cart-drawer').classList.remove('translate-x-full'); $('#cart-drawer').setAttribute('aria-hidden', 'false'); $('#cart-overlay').classList.remove('opacity-0', 'pointer-events-none'); $('#cart-close').focus(); },
+  close() { $('#cart-drawer').classList.add('translate-x-full'); $('#cart-drawer').setAttribute('aria-hidden', 'true'); $('#cart-overlay').classList.add('opacity-0', 'pointer-events-none'); $('#checkout-msg').classList.add('hidden'); },
+  update() {
+    this.save();
+    const rows = Object.entries(this.items);
+    const count = rows.reduce((s, [, q]) => s + q, 0), total = rows.reduce((s, [id, q]) => s + q * PRICES[id], 0);
+    $('#cart-count').textContent = count; $('#cart-total').textContent = money(total); $('#checkout-btn').disabled = !count;
+    $('#cart-items').innerHTML = count ? rows.map(([id, q]) => `<li class="flex items-start gap-4 bg-ink rounded-2xl p-4">
+      <div class="flex-1"><p class="font-display wide text-sm">${fl(id).name}</p><p class="text-xs text-cream/55">${money(PRICES[id])} each</p>
+        <div class="mt-2 flex items-center gap-3"><button type="button" class="w-8 h-8 rounded-full border border-white/20" data-change="${id}" data-d="-1" aria-label="Fewer ${fl(id).name}">&minus;</button>
+        <span aria-label="Quantity">${q}</span><button type="button" class="w-8 h-8 rounded-full border border-white/20" data-change="${id}" data-d="1" aria-label="More ${fl(id).name}">+</button>
+        <button type="button" class="ml-2 text-xs underline text-cream/60" data-remove="${id}">Remove</button></div></div>
+      <span class="font-bold">${money(q * PRICES[id])}</span></li>`).join('')
+      : '<li class="text-center text-cream/55 mt-10">Your basket is empty. Add a can to preview the basket.</li>';
+  }
+};
+
 /* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  initAgeGate(); renderFlavours();
+  initAgeGate(); renderFlavours(); renderProfiles(); renderShop(); Cart.load(); Cart.update();
+  document.addEventListener('click', (e) => {
+    const t = (sel) => e.target.closest(sel);   // one delegated handler for dynamic buttons
+    let b;
+    if ((b = t('[data-add]'))) { const id = b.dataset.add; Cart.add(id, readQty(id)); $('#qty-' + id).value = 1; }
+    if ((b = t('[data-step]'))) { const i = $('#qty-' + b.dataset.step); i.value = Math.min(Math.max(readQty(b.dataset.step) + +b.dataset.d, 1), MAX_QTY); }
+    if ((b = t('[data-change]'))) Cart.change(b.dataset.change, +b.dataset.d);
+    if ((b = t('[data-remove]'))) Cart.remove(b.dataset.remove);
+  });
+  $('#cart-toggle').addEventListener('click', () => Cart.open());
+  $('#cart-close').addEventListener('click', () => Cart.close());
+  $('#cart-overlay').addEventListener('click', () => Cart.close());
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && Cart.close());
+  $('#checkout-btn').addEventListener('click', () => $('#checkout-msg').classList.remove('hidden'));
   $('#menu-btn').addEventListener('click', () => { const m = $('#mobile-menu'); m.classList.toggle('hidden'); $('#menu-btn').setAttribute('aria-expanded', !m.classList.contains('hidden')); });
   $('#mobile-menu').addEventListener('click', () => $('#mobile-menu').classList.add('hidden'));
   $('#news-form').addEventListener('submit', (e) => { e.preventDefault(); $('#news-msg').textContent = 'Thanks, you are on the list (demo only, nothing was stored).'; e.target.reset(); });
