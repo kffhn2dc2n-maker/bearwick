@@ -47,8 +47,7 @@ function canSVG(f) {
     <path d="M18 24Q18 15 28 13H92Q102 15 102 24V222Q102 231 92 233H28Q18 231 18 222Z" fill="url(#body-${f.id})"/>
     <rect x="24" y="8" width="72" height="9" rx="3.5" fill="url(#rim)"/><rect x="24" y="230" width="72" height="9" rx="3.5" fill="url(#rim)"/>
     <rect x="25" y="26" width="4" height="194" rx="2" fill="#fff" opacity=".07"/>
-    <clipPath id="bw-badge"><rect x="28" y="24" width="64" height="64" rx="10"/></clipPath>
-    <image href="assets/bear-badge.png" x="28" y="24" width="64" height="64" clip-path="url(#bw-badge)" preserveAspectRatio="xMidYMid slice"/>
+    <image href="assets/bear-colour-transparent.png" x="30" y="24" width="60" height="62" preserveAspectRatio="xMidYMid meet"/>
     <text x="60" y="109" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-weight="700" font-size="11" fill="${CREAM}" letter-spacing="1.2">BEARWICK</text>
     <rect x="46" y="116" width="28" height="1.3" fill="${f.can}"/>
     ${txt}

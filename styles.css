@@ -35,3 +35,6 @@ section[id] { scroll-margin-top: 4rem; }
 /* Can concept stages: identical lighting and background for a fair comparison */
 .stage { background: radial-gradient(ellipse at 50% 25%, #2b2331, #0c0a0a 78%); border:1px solid rgba(255,255,255,.07); }
 .can-shadow { filter: drop-shadow(0 22px 22px rgba(0,0,0,.65)); }
+
+/* Thin cream halo so the bear's black linework stays visible on dark backgrounds (no box) */
+.bear-halo { filter: drop-shadow(1px 0 0 #efe3cf) drop-shadow(-1px 0 0 #efe3cf) drop-shadow(0 1px 0 #efe3cf) drop-shadow(0 -1px 0 #efe3cf); }
