@@ -31,3 +31,7 @@ section[id] { scroll-margin-top: 4rem; }
 .bar > i { display:block; height:100%; border-radius:999px; transition: width .6s ease; }
 
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+
+/* Can concept stages: identical lighting and background for a fair comparison */
+.stage { background: radial-gradient(ellipse at 50% 25%, #2b2331, #0c0a0a 78%); border:1px solid rgba(255,255,255,.07); }
+.can-shadow { filter: drop-shadow(0 22px 22px rgba(0,0,0,.65)); }

@@ -34,6 +34,7 @@ const fl = (id) => FLAVOURS.find((f) => f.id === id);
    Satin near-black can, cream Verdana type, one restrained flavour accent, the bear badge.
    Deliberately no fruit, landscapes or effects. Labelled as a concept design. */
 function canSVG(f) {
+  if (window.BW && BW.active) return BW.can(BW.active, f, 'front');   // active concept from concepts.js
   const txt = f.lines.map(([t, k], i) => {
     const big = i === 0 || t !== 'STOUT';
     return `<text x="60" y="${132 + i * 12}" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-weight="700" font-size="${t === 'STOUT' ? 5.6 : t.length > 10 ? 6.4 : 8}" fill="${k === 'a' ? f.color : CREAM}" letter-spacing="${t === 'STOUT' ? 3 : .6}">${t}</text>`;

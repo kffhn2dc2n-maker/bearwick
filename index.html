@@ -31,7 +31,7 @@
   <header class="fixed top-0 inset-x-0 z-40 bg-gradient-to-b from-ink/90 to-transparent">
     <div class="max-w-7xl mx-auto px-5 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
       <nav class="hidden md:flex gap-8 text-xs tracking-[.2em] uppercase" aria-label="Main">
-        <a href="#top" class="hover:text-cream/60">Home</a><a href="#flavours" class="hover:text-cream/60">Flavours</a>
+        <a href="#top" class="hover:text-cream/60">Home</a><a href="#flavours" class="hover:text-cream/60">Flavours</a><a href="#concepts" class="hover:text-cream/60">Concepts</a>
         <a href="#story" class="hover:text-cream/60">Our Story</a><a href="#shop" class="hover:text-cream/60">Shop</a>
       </nav>
       <button id="menu-btn" class="md:hidden justify-self-start p-2" aria-label="Menu" aria-expanded="false">
@@ -47,7 +47,7 @@
       </button>
     </div>
     <nav id="mobile-menu" class="hidden md:hidden bg-char px-5 py-4 space-y-3 text-sm tracking-[.2em] uppercase">
-      <a href="#flavours" class="block">Flavours</a><a href="#story" class="block">Our Story</a><a href="#shop" class="block">Shop</a>
+      <a href="#flavours" class="block">Flavours</a><a href="#concepts" class="block">Concepts</a><a href="#story" class="block">Our Story</a><a href="#shop" class="block">Shop</a>
     </nav>
   </header>
 
@@ -80,6 +80,9 @@
     <section id="flavours" class="border-y border-white/5">
       <div id="flavour-sections"></div>
     </section>
+
+    <!-- ============ CAN CONCEPTS (rendered by concepts.js) ============ -->
+    <section id="concepts" class="border-b border-white/5"></section>
 
     <!-- ============ BRAND STORY ============ -->
     <section id="story" class="max-w-6xl mx-auto px-5 py-28 grid md:grid-cols-2 gap-12 items-center">
@@ -137,6 +140,7 @@
     </div>
   </aside>
 
+  <script src="concepts.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
