@@ -27,12 +27,11 @@ const BUNDLE = { id:'mixed12', name:'Mixed 12-Pack', price:27, desc:'Six of each
 /* ================= HELPERS ================= */
 const $ = (s) => document.querySelector(s);
 const money = (n) => '£' + n.toFixed(2);
-const state = { mascot: 'a' };   // default mascot: 'a' emblem, 'b' character, 'c' minimal
 const CREAM = '#efe3cf';
 const fl = (id) => FLAVOURS.find((f) => f.id === id);
 
 /* ================= CAN ARTWORK =================
-   Satin near-black can, cream Verdana type, one restrained flavour accent, the active mascot.
+   Satin near-black can, cream Verdana type, one restrained flavour accent, the bear badge.
    Deliberately no fruit, landscapes or effects. Labelled as a concept design. */
 function canSVG(f) {
   const txt = f.lines.map(([t, k], i) => {
@@ -47,7 +46,8 @@ function canSVG(f) {
     <path d="M18 24Q18 15 28 13H92Q102 15 102 24V222Q102 231 92 233H28Q18 231 18 222Z" fill="url(#body-${f.id})"/>
     <rect x="24" y="8" width="72" height="9" rx="3.5" fill="url(#rim)"/><rect x="24" y="230" width="72" height="9" rx="3.5" fill="url(#rim)"/>
     <rect x="25" y="26" width="4" height="194" rx="2" fill="#fff" opacity=".07"/>
-    <use href="#bear-${state.mascot}" x="32" y="26" width="56" height="64" style="color:${CREAM};--cut:#0e0e0e"/>
+    <clipPath id="bw-badge"><rect x="28" y="24" width="64" height="64" rx="10"/></clipPath>
+    <image href="assets/bear-badge.png" x="28" y="24" width="64" height="64" clip-path="url(#bw-badge)" preserveAspectRatio="xMidYMid slice"/>
     <text x="60" y="109" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" font-weight="700" font-size="11" fill="${CREAM}" letter-spacing="1.2">BEARWICK</text>
     <rect x="46" y="116" width="28" height="1.3" fill="${f.can}"/>
     ${txt}
@@ -110,26 +110,6 @@ function renderShop() {
       </div></article>`).join('');
 }
 
-/* ================= MASCOT STUDIO ================= */
-const MASCOTS = [
-  ['a', 'Option A: Premium emblem', 'Bust with the keg peeking over the shoulder. Keeps the face and expression readable at can size.'],
-  ['b', 'Option B: Full-body character', 'The whole bear, off-balance with the keg strapped on. The most personality, best for merch and social.'],
-  ['c', 'Option C: Minimal symbol', 'A simple side-on silhouette. The most understated, with the least expression.']
-];
-function renderMascots() {
-  $('#mascot-options').innerHTML = MASCOTS.map(([id, title, blurb]) => `
-    <article class="rounded-3xl p-6 border ${id === state.mascot ? 'border-cream/70 bg-char' : 'border-white/10 bg-char/50'}">
-      <div class="h-48 rounded-2xl bg-ink flex items-center justify-center"><svg class="h-40 w-40" style="color:${CREAM};--cut:#0c0a0a"><use href="#bear-${id}"/></svg></div>
-      <div class="mt-3 flex items-center gap-3"><div class="w-12 h-12 rounded-lg flex items-center justify-center" style="background:${CREAM}"><svg class="w-9 h-9" style="color:#0c0a0a;--cut:${CREAM}"><use href="#bear-${id}"/></svg></div><span class="text-xs text-cream/50">One-colour test</span></div>
-      <h3 class="font-display wide text-sm mt-4">${title}</h3><p class="mt-2 text-sm text-cream/65">${blurb}</p>
-      <button class="${id === state.mascot ? 'btn' : 'btn-ghost'} mt-4 !py-2.5 !px-5" data-mascot-pick="${id}">${id === state.mascot ? 'In use' : 'Use on cans'}</button></article>`).join('');
-}
-function applyMascot(id) {
-  state.mascot = id;
-  document.querySelectorAll('use[data-mascot]').forEach((u) => u.setAttribute('href', '#bear-' + id));   // header, story, footer, age gate
-  renderFlavours(); renderShop(); renderMascots();
-}
-
 /* ================= BASKET ================= */
 const Cart = {
   items: {},   // { key: { name, price, qty } }
@@ -154,7 +134,7 @@ const Cart = {
 
 /* ================= INIT ================= */
 document.addEventListener('DOMContentLoaded', () => {
-  initAgeGate(); applyMascot(state.mascot); Cart.load(); Cart.update();
+  initAgeGate(); renderFlavours(); renderShop(); Cart.load(); Cart.update();
   document.addEventListener('click', (e) => {
     const t = (sel) => e.target.closest(sel);   // one delegated handler for dynamic buttons
     if (t('[data-add-bundle]')) Cart.add(BUNDLE.id, BUNDLE.name, BUNDLE.price);
@@ -162,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const f = fl(t('[data-add-flavour]').dataset.addFlavour), k = document.querySelector(`[data-pack="${f.id}"]`).value, p = PACKS[k];
       Cart.add(`${f.id}:${k}`, `${f.name}, ${p.label}`, p.price);
     }
-    if (t('[data-mascot-pick]')) applyMascot(t('[data-mascot-pick]').dataset.mascotPick);
     if (t('[data-qty]')) Cart.change(t('[data-qty]').dataset.qty, +t('[data-qty]').dataset.d);
   });
   $('#cart-toggle').addEventListener('click', () => Cart.open());
