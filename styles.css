@@ -33,5 +33,3 @@ section[id] { scroll-margin-top: 4rem; }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
 
 
-/* Thin cream halo so the bear's black linework stays visible on dark backgrounds (no box) */
-.bear-halo { filter: drop-shadow(1px 0 0 #efe3cf) drop-shadow(-1px 0 0 #efe3cf) drop-shadow(0 1px 0 #efe3cf) drop-shadow(0 -1px 0 #efe3cf); }

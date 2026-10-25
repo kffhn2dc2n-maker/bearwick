@@ -4,11 +4,11 @@
 /* ================= DATA ================= */
 // No ABV, tasting scores, nutrition or health claims: none are confirmed yet.
 const FLAVOURS = [
-  { id:'blackcurrant', name:'Blackcurrant Stout', lines:[['BLACKCURRANT','a'],['STOUT','c']], color:'#9b6be0', can:'#6d3fb8',
+  { id:'blackcurrant', name:'Blackcurrant Stout', lines:[['BLACKCURRANT','a'],['STOUT','c']], color:'#a982f2', can:'#7a45d6',
     tag:'Dark. Fruity. Balanced.',
     desc:'A smooth stout with a distinctive blackcurrant character. Fruity and easy to drink, with the roasted malt that keeps it properly stout.',
     fruit:['Blackcurrant','Gives the fruity, slightly tart character that sets this stout apart.'] },
-  { id:'cherry', name:'Cherry & Vanilla Stout', lines:[['CHERRY &','a'],['VANILLA','c'],['STOUT','c']], color:'#d1405a', can:'#a3182f',
+  { id:'cherry', name:'Cherry & Vanilla Stout', lines:[['CHERRY &','a'],['VANILLA','c'],['STOUT','c']], color:'#f0566f', can:'#c4223c',
     tag:'Smooth. Rounded. Distinctive.',
     desc:'Cherry fruitiness softened by vanilla. Smooth and balanced, aiming to be rounded rather than sweet or dessert-like.',
     fruit:['Cherry and vanilla','Cherry brings the fruit; vanilla is there to round it off and keep it smooth.'] }
