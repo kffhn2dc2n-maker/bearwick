@@ -1,4 +1,4 @@
-/* BEARWICK: styles that complement Tailwind utilities */
+/* URSO: styles that complement Tailwind utilities */
 :root { --accent: #8e5cd1; }                      /* swapped by script.js when a flavour is selected */
 html { scroll-behavior: smooth; }
 body { font-family: Verdana, Geneva, sans-serif; }

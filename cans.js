@@ -1,4 +1,4 @@
-/* BEARWICK: the can design (Modern Heritage) in both flavours, with front + side-angle mockups.
+/* URSO: the can design (Modern Heritage) in both flavours, with front + side-angle mockups.
    Artwork only: no ABV, nutrition, prices or availability claims. */
 (function () {
   const CR = '#efe3cf', BR = '#b8975a', INK = '#0e0e0e', FF = 'Verdana,Geneva,sans-serif';
@@ -6,7 +6,7 @@
   const BW = window.BW = { can: null, abv: '4.2% ABV' };   // abv: intended strength, shown on every can and in the shop text
   const T = (x, y, s, sz, fill, ls = 0) => ['#000', fill].map((c, i) =>
     `<text x="${x}" y="${y + (i ? 0 : .5)}" text-anchor="middle" font-family="${FF}" font-weight="700" font-size="${sz}" letter-spacing="${ls}" fill="${c}"${i ? '' : ' opacity=".55"'}>${s}</text>`).join('');
-  const GOLD = '#c9a96a', DK = '#14110f';
+  const GOLD = '#d2b070', DK = '#14110f';
   const berry = (x, y, r, fill) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${GOLD}" stroke-width=".35"/><ellipse cx="${x - r * .35}" cy="${y - r * .42}" rx="${r * .32}" ry="${r * .18}" fill="#fff" opacity=".6" transform="rotate(-30 ${x} ${y})"/><circle cx="${x + r * .1}" cy="${y + r * .75}" r=".35" fill="${GOLD}"/>`;
   const leaf = (x, y, rot, s) => `<path d="M0 0Q${3 * s} ${-3 * s} ${8 * s} 0Q${3 * s} ${3 * s} 0 0ZM0 0L${7 * s} 0" transform="translate(${x} ${y}) rotate(${rot})" fill="#1a281c" stroke="${GOLD}" stroke-width=".45"/>`;
   const stem = (d, w = .7) => `<path d="${d}" fill="none" stroke="${GOLD}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -28,7 +28,7 @@
     <text x="60" y="44.5" text-anchor="middle" font-family="${FF}" font-size="3" fill="${GOLD}" letter-spacing="1.8">WARWICKSHIRE</text>
     ${wreath(f.id)}<mask id="bm${u}"><image href="assets/bear-emblem.png" x="41.9" y="46.4" width="36" height="35.5"/></mask>
     <image href="assets/bear-emblem.png" x="41.9" y="46.4" width="36" height="35.5"/><rect x="41.9" y="46.4" width="36" height="35.5" fill="url(#sp${u})" mask="url(#bm${u})"/>
-    ${T(60, 95, 'BEARWICK', 8.6, CR, 1.1)}<path d="M45 99.5H75" stroke="${GOLD}" stroke-width=".5"/><path d="M60 97.6l1.9 1.9-1.9 1.9-1.9-1.9z" fill="${GOLD}"/>
+    ${T(60, 97.5, 'URSO', 14, GOLD, 2.6)}<text x="60" y="97.5" text-anchor="middle" font-family="${FF}" font-weight="700" font-size="14" letter-spacing="2.6" fill="url(#sp${u})">URSO</text><path d="M45 102H75" stroke="${GOLD}" stroke-width=".5"/><path d="M60 100.1l1.9 1.9-1.9 1.9-1.9-1.9z" fill="${GOLD}"/>
     ${LAY[f.id].map(([t, sz, ls, y, acc]) => T(60, y, t, sz, acc ? f.color : CR, ls)).join('')}
     <rect x="30" y="133.4" width="60" height="2" fill="${f.can}"/><rect x="30" y="133.4" width="60" height="2" fill="url(#sp${u})" opacity=".6"/>
     <text x="60" y="143.5" text-anchor="middle" font-family="${FF}" font-weight="700" font-size="4.4" fill="${CR}" letter-spacing=".8">${BW.abv}</text>
@@ -39,7 +39,7 @@
   function can(concept, f, view) {
     const u = ++uid, side = view === 'side';
     const body = 'M18 38Q18 30 26 26L32 22H88L94 26Q102 30 102 38V150Q102 160 92 162H28Q18 160 18 150Z';   // 84 wide x 140 tall, about 1.7:1 like a 330ml can
-    return `<svg viewBox="0 0 120 172" class="w-full h-auto" role="img" aria-label="BEARWICK ${f.name} 330ml concept can, ${side ? 'side angle' : 'front, slight angle'}">
+    return `<svg viewBox="0 0 120 172" class="w-full h-auto" role="img" aria-label="URSO ${f.name} 330ml concept can, ${side ? 'side angle' : 'front, slight angle'}">
       <defs><filter id="hl${u}" x="-8%" y="-8%" width="116%" height="116%"><feMorphology in="SourceAlpha" operator="dilate" radius=".5" result="d"/><feFlood flood-color="${CR}"/><feComposite in2="d" operator="in" result="h"/><feMerge><feMergeNode in="h"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       <clipPath id="k${u}"><path d="${body}"/></clipPath>
       <linearGradient id="y${u}" x1="0" x2="1"><stop offset="0" stop-color="#050505"/><stop offset=".25" stop-color="#1c1c1c"/><stop offset=".5" stop-color="#111"/><stop offset=".85" stop-color="#171717"/><stop offset="1" stop-color="#050505"/></linearGradient>

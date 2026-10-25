@@ -1,4 +1,4 @@
-/* BEARWICK: page behaviour (vanilla JS)
+/* URSO: page behaviour (vanilla JS)
    Order: DATA -> can artwork -> age gate -> flavour sections -> profiles -> shop -> basket -> init *
 
 /* ================= DATA ================= */
