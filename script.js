@@ -71,6 +71,7 @@ function renderFlavours() {
           <p class="font-display wide text-sm tracking-widest" style="color:${f.color}">${f.tag}</p>
           <h2 class="font-display wide font-extrabold text-4xl md:text-5xl mt-2">${f.name}</h2>
           <p class="mt-5 text-lg text-cream/75 leading-relaxed max-w-lg">${f.desc}</p>
+          <p class="mt-3 text-sm text-cream/60">330ml can · intended strength ${BW.abv}. Concept target: the final ABV is subject to brewing and testing.</p>
           <h3 class="font-display wide text-sm mt-10 mb-3 text-cream/60">Ingredients</h3>
           <dl class="grid sm:grid-cols-2 gap-3">${items.map(([g, n, d]) => `<div class="rounded-2xl bg-ink/60 border border-white/10 p-4">
             <dt class="text-[11px] tracking-widest uppercase" style="color:${f.color}">${g}</dt><dd class="font-bold mt-1">${n}</dd><dd class="text-sm text-cream/60 mt-1">${d}</dd></div>`).join('')}</dl>
@@ -101,6 +102,7 @@ function renderShop() {
       <div class="flex flex-col flex-1">
         <h3 class="font-display wide text-lg" style="color:${f.color}">${f.name}</h3>
         <p class="text-sm text-cream/65 mt-2">${f.tag}</p>
+        <p class="text-xs text-cream/50 mt-1">330ml · ${BW.abv} (intended, subject to testing)</p>
         <p class="mt-3 font-display text-2xl font-bold">${money(PRICES[f.id])} <span class="text-xs font-normal text-cream/50">per can · provisional</span></p>
         <div class="mt-4 flex items-center gap-2" role="group" aria-label="Quantity of ${f.name}">
           <button type="button" class="w-9 h-9 rounded-full border border-white/25" data-step="${f.id}" data-d="-1" aria-label="Fewer ${f.name}">&minus;</button>
